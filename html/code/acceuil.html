@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+  <head>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/html/img/title_img.png" type="image/png">
+    <title>Connectify</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg-dark: #050509;
+        --bg-card: #0f1016;
+        --neon-purple: #bc13fe;
+        --neon-blue: #00d4ff;
+        --neon-pink: #ff0055;
+        --text-grey: #b0b3b8;
+        --nav-height: 70px; /* حددنا علو النافبار باش الحساب يكون دقيق */
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: white;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden; /* حبسنا السكرول على الصفحة كاملة */
+      }
+
+      /* Scrollbar Styling - ديزاين السكرول */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-dark);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--neon-purple);
+        border-radius: 4px;
+      }
+
+      /* Navbar Styling */
+      .navbar {
+        background-color: var(--bg-card);
+        border-bottom: 1px solid var(--neon-purple);
+        box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+        height: var(--nav-height);
+        z-index: 1000;
+      }
+
+
+    .navbar-brand {
+  font-family: 'Audiowide', cursive; /* هنا زدنا الخط الجديد */
+  font-weight: 700; /* غلضنا الكتابة */
+  font-size: 1.8rem; /* كبرناها شوية */
+  background: linear-gradient(
+    to right,
+    var(--neon-blue),
+    var(--neon-purple)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  letter-spacing: 1px; /* زدنا فالتّباعد بين الحروف */
+}
+      .nav-icon {
+        font-size: 1.4rem;
+        color: var(--text-grey);
+        padding: 0 15px;
+        transition: 0.3s;
+        cursor: pointer;
+      }
+
+      .nav-icon:hover,
+      .nav-icon.active {
+        color: var(--neon-blue);
+        text-shadow: 0 0 8px var(--neon-blue);
+      }
+
+      /* Layout Columns (Sidebars & Feed) */
+      /* هاد الكلاس هو اللي كيعطي السكرول لكل جزء بوحدو */
+      .scroll-column {
+        height: calc(
+          100vh - var(--nav-height)
+        ); /* الطول الكامل ناقص النافبار */
+        overflow-y: auto; /* سكرول عمودي */
+        padding-top: 20px;
+        padding-bottom: 50px;
+      }
+
+      /* Sidebar Items */
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        color: white;
+        margin-bottom: 5px;
+      }
+
+      .sidebar-item:hover {
+        background-color: rgba(188, 19, 254, 0.1);
+        border-left: 3px solid var(--neon-purple);
+      }
+
+      .sidebar-item i {
+        width: 30px;
+        font-size: 1.2rem;
+        color: var(--neon-blue);
+      }
+
+      /* Neon Cards */
+      .neon-card {
+        background-color: var(--bg-card);
+        border: 1px solid var(--neon-purple);
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(188, 19, 254, 0.15);
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+
+      /* Stories Section */
+      .story-container {
+        display: flex;
+        gap: 10px;
+        overflow-x: auto;
+        padding: 10px 0;
+      }
+
+      /* Hide scrollbar for stories specifically but allow scroll */
+      .story-container::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      .story-card {
+        min-width: 110px;
+        height: 190px;
+        border-radius: 12px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        cursor: pointer;
+        border: 1px solid var(--neon-blue);
+        transition: transform 0.2s;
+      }
+
+      .story-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 10px var(--neon-blue);
+      }
+
+      .story-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        border: 2px solid var(--neon-purple);
+        position: absolute;
+        top: 10px;
+        left: 10px;
+      }
+
+      .story-name {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        text-shadow: 1px 1px 2px black;
+      }
+
+      /* Create Post Input */
+      .create-post {
+        padding: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .create-post input {
+        background: #1c1d26;
+        border: 1px solid #333;
+        border-radius: 20px;
+        color: white;
+        width: 100%;
+        padding: 8px 15px;
+      }
+
+      .create-post input:focus {
+        outline: none;
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 5px var(--neon-blue);
+      }
+
+      /* Post Card */
+      .post-header {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        justify-content: space-between;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--neon-pink);
+      }
+
+      .post-image {
+        width: 100%;
+        height: auto;
+        border-top: 1px solid #333;
+        border-bottom: 1px solid #333;
+        display: block;
+      }
+      /* هاد الكود خاص باش يعطي الضل (Glow) للـ SVG بوحدو */
+      .nav-icon:hover svg {
+        filter: drop-shadow(0 0 8px var(--neon-blue));
+}
+
+      .post-actions {
+        padding: 10px 15px;
+        display: flex;
+        justify-content: space-around;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .action-btn {
+        color: var(--text-grey);
+        cursor: pointer;
+        transition: 0.2s;
+      }
+
+      .action-btn:hover {
+        color: var(--neon-purple);
+      }
+
+      /* Right Sidebar Contacts */
+      .contact-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        border-radius: 8px;
+        cursor: pointer;
+        gap: 10px;
+      }
+
+      .contact-item:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .online-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #00ff00;
+        border-radius: 50%;
+        box-shadow: 0 0 5px #00ff00;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar fixed-top p-0" style="background-color: var(--bg-card); border-bottom: 1px solid var(--neon-purple); box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);">
+  <div class="container-fluid">
+    <div class="row w-100 align-items-center m-0" style="height: var(--nav-height);">
+      
+      <div class="col-3 d-flex align-items-center gap-2 ps-2">
+         <img 
+           src="/html/img/title_img.png" 
+           alt="Logo" 
+           class="ms-3" 
+           style="height: 40px; width: auto; object-fit: contain;"
+         />
+         <a class="navbar-brand" href="#">CONNECTIFY</a>
+      </div>
+
+      <div class="col-6 d-flex justify-content-center">
+        <div class="d-none d-md-flex justify-content-between" style="width: 60%; max-width: 300px;">
+          
+          <div class="nav-icon active"><i class="fas fa-home"></i></div>
+          <div class="nav-icon"><i class="fas fa-store"></i></div>
+          
+          <div class="nav-icon">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" 
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              style="margin-bottom: 3px;"
+            >
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <line x1="2" y1="7" x2="22" y2="7"></line>
+              <line x1="8" y1="2" x2="6" y2="7"></line>
+              <line x1="16" y1="2" x2="14" y2="7"></line>
+              <path d="M10 10l6 3.5-6 3.5V10z" fill="currentColor" stroke="none"></path>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="col-3 d-flex align-items-center justify-content-end gap-3 pe-2">
+        <div class="nav-icon"><i class="fas fa-search"></i></div>
+        <div class="nav-icon"><i class="fas fa-bell"></i></div>
+        <img
+          src="https://i.pravatar.cc/150?img=11"
+          class="user-avatar"
+          style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--neon-pink);"
+        />
+      </div>
+
+    </div>
+  </div>
+</nav>
+
+    <div style="height: var(--nav-height)"></div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3 d-none d-lg-block scroll-column">
+          <div class="sidebar-item">
+            <img
+              src="https://i.pravatar.cc/150?img=11"
+              class="user-avatar me-2"
+              style="border: none"
+            />
+            <span>Brahim AI</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-user-friends"></i> <span>Friends</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-users"></i> <span>Groups</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-store"></i> <span>Marketplace</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-video"></i> <span>Reels</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-clock"></i> <span>Memories</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-bookmark"></i> <span>Saved</span>
+          </div>
+          <hr style="border-color: var(--neon-purple)" />
+          <div class="sidebar-item">
+            <i class="fas fa-chart-line"></i> <span>Ads Manager</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-calendar-alt"></i> <span>Events</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-gamepad"></i> <span>Gaming</span>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-lg-6 scroll-column">
+          <div class="neon-card create-post">
+            <img src="https://i.pravatar.cc/150?img=11" class="user-avatar" />
+            <input type="text" placeholder="What's on your mind, Brahim?" />
+            <i class="fas fa-images text-success fs-4"></i>
+            <i class="fas fa-smile text-warning fs-4"></i>
+          </div>
+
+          <div class="neon-card p-2">
+            <div class="story-container">
+              <div
+                class="story-card"
+                style="
+                  background-image: url('https://images.unsplash.com/photo-1511367461989-f85a21fda167?w=400');
+                "
+              >
+                <div
+                  class="story-avatar bg-primary d-flex justify-content-center align-items-center text-white"
+                >
+                  <i class="fas fa-plus"></i>
+                </div>
+                <span class="story-name">Create Story</span>
+              </div>
+              <div
+                class="story-card"
+                style="
+                  background-image: url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400');
+                "
+              >
+                <img
+                  src="https://i.pravatar.cc/150?img=5"
+                  class="story-avatar"
+                />
+                <span class="story-name">Mr. Silicat</span>
+              </div>
+              <div
+                class="story-card"
+                style="
+                  background-image: url('https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=400');
+                "
+              >
+                <img
+                  src="https://i.pravatar.cc/150?img=3"
+                  class="story-avatar"
+                />
+                <span class="story-name">Fatima Dev</span>
+              </div>
+              <div
+                class="story-card"
+                style="
+                  background-image: url('https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400');
+                "
+              >
+                <img
+                  src="https://i.pravatar.cc/150?img=8"
+                  class="story-avatar"
+                />
+                <span class="story-name">Rachid Tech</span>
+              </div>
+              <div
+                class="story-card"
+                style="
+                  background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400');
+                "
+              >
+                <img
+                  src="https://i.pravatar.cc/150?img=10"
+                  class="story-avatar"
+                />
+                <span class="story-name">Karim UX</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="neon-card">
+            <div class="post-header">
+              <div class="user-info">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/7/7c/Facebook_New_Logo_%282019%29.png"
+                  class="user-avatar"
+                  style="padding: 2px; background: white"
+                />
+                <div>
+                  <h6 class="mb-0 fw-bold">ToutaoMaroc.com</h6>
+                  <small class="text-secondary"
+                    >1 h <i class="fas fa-globe-americas"></i
+                  ></small>
+                </div>
+              </div>
+              <i class="fas fa-ellipsis-h text-secondary"></i>
+            </div>
+            <div class="p-2">
+              <p dir="rtl" class="text-end mb-2">
+                رسمياً.. شركة مرسى المغرب (Marsa Maroc) تعلن عن مباريات توظيف
+                2025 🚨
+              </p>
+            </div>
+            <div style="position: relative">
+              <img
+                src="https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?w=800&q=80"
+                class="post-image"
+              />
+              <div
+                style="
+                  position: absolute;
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                  background: rgba(0, 0, 0, 0.6);
+                  padding: 15px;
+                  border-radius: 50%;
+                  border: 2px solid var(--neon-blue);
+                "
+              >
+                <i class="fas fa-play text-white fa-2x"></i>
+              </div>
+            </div>
+            <div class="post-actions">
+              <div class="action-btn">
+                <i class="far fa-thumbs-up"></i> Like
+              </div>
+              <div class="action-btn">
+                <i class="far fa-comment"></i> Comment
+              </div>
+              <div class="action-btn"><i class="fas fa-share"></i> Share</div>
+            </div>
+          </div>
+
+          <div class="neon-card">
+            <div class="post-header">
+              <div class="user-info">
+                <img
+                  src="https://i.pravatar.cc/150?img=60"
+                  class="user-avatar"
+                />
+                <div>
+                  <h6 class="mb-0 fw-bold">Fy AI</h6>
+                  <small class="text-secondary"
+                    >3 h <i class="fas fa-globe-americas"></i
+                  ></small>
+                </div>
+              </div>
+              <i class="fas fa-ellipsis-h text-secondary"></i>
+            </div>
+            <div class="p-2">
+              <p>
+                Working on the new dark mode UI! What do you think about these
+                neon colors? #WebDesign #UI #Cyberpunk
+              </p>
+            </div>
+            <img
+              src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=800&q=80"
+              class="post-image"
+            />
+            <div class="post-actions">
+              <div class="action-btn">
+                <i class="far fa-thumbs-up"></i> Like
+              </div>
+              <div class="action-btn">
+                <i class="far fa-comment"></i> Comment
+              </div>
+              <div class="action-btn"><i class="fas fa-share"></i> Share</div>
+            </div>
+          </div>
+
+          <div class="neon-card">
+            <div class="post-header">
+              <div class="user-info">
+                <img
+                  src="https://i.pravatar.cc/150?img=12"
+                  class="user-avatar"
+                />
+                <div>
+                  <h6 class="mb-0 fw-bold">R3f Chend</h6>
+                  <small class="text-secondary"
+                    >5 h <i class="fas fa-globe-americas"></i
+                  ></small>
+                </div>
+              </div>
+              <i class="fas fa-ellipsis-h text-secondary"></i>
+            </div>
+            <div class="p-2">
+              <p>Just launched a new project. Check the link in bio! 🚀</p>
+            </div>
+            <div
+              class="bg-dark p-5 text-center text-muted border-top border-bottom border-secondary"
+            >
+              [Link Preview Content]
+            </div>
+            <div class="post-actions">
+              <div class="action-btn">
+                <i class="far fa-thumbs-up"></i> Like
+              </div>
+              <div class="action-btn">
+                <i class="far fa-comment"></i> Comment
+              </div>
+              <div class="action-btn"><i class="fas fa-share"></i> Share</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3 d-none d-lg-block scroll-column sidebar-right">
+          <h6 class="text-secondary mb-3">Contacts</h6>
+
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=60" class="user-avatar" />
+            <span>Fy AI</span>
+            <i class="fas fa-check-circle text-primary ms-1"></i>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=59" class="user-avatar" />
+            <span>Al Mahmoudi</span>
+            <div class="online-dot ms-auto"></div>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=32" class="user-avatar" />
+            <span>FatimaezZahra</span>
+            <div class="online-dot ms-auto"></div>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=12" class="user-avatar" />
+            <span>R3f Chend</span>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=15" class="user-avatar" />
+            <span>Abu Mohamed</span>
+            <div class="online-dot ms-auto"></div>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=19" class="user-avatar" />
+            <span>Chirag Langer</span>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=20" class="user-avatar" />
+            <span>Nauros Imuett</span>
+            <div class="online-dot ms-auto"></div>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=25" class="user-avatar" />
+            <span>Fareedoth Wakli</span>
+          </div>
+          <div class="contact-item">
+            <img src="https://i.pravatar.cc/150?img=33" class="user-avatar" />
+            <span>Aseel Abdullah</span>
+            <div class="online-dot ms-auto"></div>
+          </div>
+
+          <div
+            class="position-fixed bottom-0 end-0 m-3 d-flex align-items-center justify-content-center"
+            style="
+              width: 50px;
+              height: 50px;
+              background: var(--bg-card);
+              border: 1px solid var(--neon-purple);
+              border-radius: 50%;
+              cursor: pointer;
+              z-index: 1050;
+            "
+          >
+            <i class="fas fa-edit fa-lg text-white"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
