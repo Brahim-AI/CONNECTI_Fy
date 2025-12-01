@@ -170,6 +170,15 @@
         top: 10px;
         left: 10px;
       }
+      /* كلاس باش نخبيو السكرول بار */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
 
       .story-name {
         position: absolute;
@@ -187,6 +196,28 @@
         align-items: center;
         gap: 10px;
       }
+      /* هذا هو الستايل الموحد للـ Inputs بجوج */
+.search-input {
+  background: #1c1d26;
+  border: 1px solid #333;
+  border-radius: 20px;
+  color: white;
+  width: 100%;
+  padding: 8px 15px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--neon-blue);
+  box-shadow: 0 0 5px var(--neon-blue);
+}
+
+/* هاد اللعيبة باش نزيدو أيقونة البحث لداخل إلا بغينا من بعد */
+.search-input::placeholder {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
 
       .create-post input {
         background: #1c1d26;
@@ -218,6 +249,7 @@
       }
 
       .user-avatar {
+        cursor: pointer;
         width: 40px;
         height: 40px;
         border-radius: 50%;
@@ -275,6 +307,46 @@
         border-radius: 50%;
         box-shadow: 0 0 5px #00ff00;
       }
+@media (min-width: 992px) {
+  /* اليسارية: 15% */
+  .col-custom-left {
+    flex: 0 0 15% !important;
+    max-width: 15% !important;
+  }
+
+  /* الوسطانية: 65% (باش المجموع يكمل 100%) */
+  .col-custom-center {
+    flex: 0 0 65% !important;
+    max-width: 65% !important;
+  }
+
+  /* اليمنية: 20% */
+  .col-custom-right {
+    flex: 0 0 20% !important;
+    max-width: 20% !important;
+  }
+}
+@media (max-width: 750px) {
+  /* خبي الجناب (اللوغو والبروفايل) */
+  .nav-side {
+    display: none !important;
+  }
+
+  /* الوسط ياخد العرض كامل */
+  .nav-center {
+    width: 100% !important;
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* الأيقونات يتفرقو مزيان فالتيلفون */
+  .icons-container {
+    width: 100% !important; /* يحيد داك الـ 60% القديمة */
+    max-width: 100% !important;
+    justify-content: space-around !important; /* يتباعدو بالتساوي */
+    padding: 0 20px;
+  }
+}
     </style>
   </head>
   <body>
@@ -282,28 +354,19 @@
   <div class="container-fluid">
     <div class="row w-100 align-items-center m-0" style="height: var(--nav-height);">
       
-      <div class="col-3 d-flex align-items-center gap-2 ps-2">
-         <img 
-           src="/html/img/title_img.png" 
-           alt="Logo" 
-           class="ms-3" 
-           style="height: 40px; width: auto; object-fit: contain;"
-         />
+      <div class="col-3 d-flex align-items-center gap-2 ps-2 nav-side">
+         <img src="/html/img/title_img.png" alt="Logo" class="ms-3" style="height: 50px; width: auto; object-fit: contain;"/>
          <a class="navbar-brand" href="#">CONNECTIFY</a>
       </div>
 
-      <div class="col-6 d-flex justify-content-center">
-        <div class="d-none d-md-flex justify-content-between" style="width: 60%; max-width: 300px;">
+      <div class="col-6 d-flex justify-content-center nav-center">
+        <div class="d-flex justify-content-between gap-4 icons-container" style="width: 60%; max-width: 400px;">
           
           <div class="nav-icon active"><i class="fas fa-home"></i></div>
           <div class="nav-icon"><i class="fas fa-store"></i></div>
           
           <div class="nav-icon">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" 
-              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              style="margin-bottom: 3px;"
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 3px;">
               <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
               <line x1="2" y1="7" x2="22" y2="7"></line>
               <line x1="8" y1="2" x2="6" y2="7"></line>
@@ -315,14 +378,10 @@
         </div>
       </div>
 
-      <div class="col-3 d-flex align-items-center justify-content-end gap-3 pe-2">
+      <div class="col-3 d-flex align-items-center justify-content-end gap-3 pe-2 nav-side">
         <div class="nav-icon"><i class="fas fa-search"></i></div>
         <div class="nav-icon"><i class="fas fa-bell"></i></div>
-        <img
-          src="https://i.pravatar.cc/150?img=11"
-          class="user-avatar"
-          style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--neon-pink);"
-        />
+        <img src="https://i.pravatar.cc/150?img=11" class="user-avatar" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--neon-pink);"/>
       </div>
 
     </div>
@@ -333,14 +392,14 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-md-3 d-none d-lg-block scroll-column">
+        <div class="d-none d-lg-block scroll-column col-custom-left">
           <div class="sidebar-item">
             <img
               src="https://i.pravatar.cc/150?img=11"
               class="user-avatar me-2"
               style="border: none"
             />
-            <span>Brahim AI</span>
+            <span id="profile">Brahim AI</span>
           </div>
           <div class="sidebar-item">
             <i class="fas fa-user-friends"></i> <span>Friends</span>
@@ -354,31 +413,14 @@
           <div class="sidebar-item">
             <i class="fas fa-video"></i> <span>Reels</span>
           </div>
-          <div class="sidebar-item">
-            <i class="fas fa-clock"></i> <span>Memories</span>
-          </div>
-          <div class="sidebar-item">
-            <i class="fas fa-bookmark"></i> <span>Saved</span>
-          </div>
           <hr style="border-color: var(--neon-purple)" />
-          <div class="sidebar-item">
-            <i class="fas fa-chart-line"></i> <span>Ads Manager</span>
-          </div>
-          <div class="sidebar-item">
-            <i class="fas fa-calendar-alt"></i> <span>Events</span>
-          </div>
           <div class="sidebar-item">
             <i class="fas fa-gamepad"></i> <span>Gaming</span>
           </div>
         </div>
 
-        <div class="col-md-12 col-lg-6 scroll-column">
-          <div class="neon-card create-post">
-            <img src="https://i.pravatar.cc/150?img=11" class="user-avatar" />
-            <input type="text" placeholder="What's on your mind, Brahim?" />
-            <i class="fas fa-images text-success fs-4"></i>
-            <i class="fas fa-smile text-warning fs-4"></i>
-          </div>
+        <div class="col-md-12 col-custom-center scroll-column hide-scrollbar">
+          
 
           <div class="neon-card p-2">
             <div class="story-container">
@@ -573,9 +615,9 @@
           </div>
         </div>
 
-        <div class="col-md-3 d-none d-lg-block scroll-column sidebar-right">
+        <div class="col-custom-right d-none d-lg-block scroll-column sidebar-right hide-scrollbar">
           <h6 class="text-secondary mb-3">Contacts</h6>
-
+        <input type="text" class="search-input mb-3" placeholder="Search for friend..." />
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=60" class="user-avatar" />
             <span>Fy AI</span>
@@ -584,12 +626,12 @@
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=59" class="user-avatar" />
             <span>Al Mahmoudi</span>
-            <div class="online-dot ms-auto"></div>
+            
           </div>
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=32" class="user-avatar" />
             <span>FatimaezZahra</span>
-            <div class="online-dot ms-auto"></div>
+            
           </div>
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=12" class="user-avatar" />
@@ -598,7 +640,7 @@
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=15" class="user-avatar" />
             <span>Abu Mohamed</span>
-            <div class="online-dot ms-auto"></div>
+            
           </div>
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=19" class="user-avatar" />
@@ -607,7 +649,7 @@
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=20" class="user-avatar" />
             <span>Nauros Imuett</span>
-            <div class="online-dot ms-auto"></div>
+            
           </div>
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=25" class="user-avatar" />
@@ -616,7 +658,7 @@
           <div class="contact-item">
             <img src="https://i.pravatar.cc/150?img=33" class="user-avatar" />
             <span>Aseel Abdullah</span>
-            <div class="online-dot ms-auto"></div>
+            
           </div>
 
           <div

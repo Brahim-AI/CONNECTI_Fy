@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
+<html lang="ar" dir="ltr">
   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/html/img/title_img.png" type="image/png">
-
-    <title>Connectify Marketplace - Bootstrap Single File</title>
-
+    <title>Connectify - Marketplace</title>
+   
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -17,377 +21,387 @@
     />
 
     <style>
-      /* --- Custom Variables & Theming --- */
       :root {
-        /* Defining the specific dark shades from the image */
-        --bg-main-dark: #0a0a14;
-        --bg-card-dark: #1a1a24;
-        --neon-pink: #d946ef;
-        --neon-blue: #0ea5e9;
-        --accent-blue-fill: #1e40af;
+        --bg-dark: #050509;
+        --bg-card: #0f1016;
+        --neon-purple: #bc13fe;
+        --neon-blue: #00d4ff;
+        --neon-pink: #ff0055;
+        --text-grey: #b0b3b8;
+        --nav-height: 70px;
       }
 
-      /* Override Bootstrap body background */
       body {
-        background-color: var(--bg-main-dark) !important;
-        height: 100vh;
-        overflow: hidden; /* Prevent double scrollbars with the fixed header */
+        background-color: var(--bg-dark);
+        color: white;
         font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden;
       }
 
-      /* Utility class for card backgrounds */
-      .bg-card-dark {
-        background-color: var(--bg-card-dark) !important;
+      /* Scrollbar Styling */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg-dark);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--neon-purple);
+        border-radius: 4px;
       }
 
-      /* Utility classes for text colors */
-      .text-neon-pink {
-        color: var(--neon-pink) !important;
-      }
-      .text-neon-blue {
-        color: var(--neon-blue) !important;
-      }
-
-      /* --- Header Specifics --- */
-      .main-header {
-        height: 60px;
-        background-color: var(--bg-main-dark);
-        border-bottom: 1px solid #2a2a3a;
+      /* Navbar Styling */
+      .navbar {
+        background-color: var(--bg-card);
+        border-bottom: 1px solid var(--neon-purple);
+        box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+        height: var(--nav-height);
+        z-index: 1000;
       }
 
-      .brand-name {
-        background: linear-gradient(
-          to right,
-          var(--neon-blue),
-          var(--neon-pink)
-        );
+      .navbar-brand {
+        font-family: 'Audiowide', cursive;
+        font-weight: 700;
+        font-size: 1.8rem;
+        background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        text-transform: uppercase;
+        letter-spacing: 1px;
       }
 
-      /* Adjusted spacing for header center nav icons */
-      .header-center {
-        display: flex;
-        height: 100%;
-        /* Adjusted gap to increase space */
-        gap: 60px; /* Increased gap for more space between icons */
-      }
-
-      /* Nav Icon underline effect */
       .nav-icon {
-        position: relative;
-      }
-
-      .nav-icon.active::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 3px;
-        background-color: var(--neon-pink);
-        box-shadow: 0 -2px 10px var(--neon-pink);
-      }
-
-      /* Action icons hover effect */
-      .action-icon:hover {
-        background-color: #3a3a4a !important; /* Slightly lighter on hover */
+        font-size: 1.4rem;
+        color: var(--text-grey);
+        padding: 0 15px;
+        transition: 0.3s;
         cursor: pointer;
       }
 
-      /* --- Layout Containers --- */
-      /* Ensure main container takes remaining height below header */
-      .app-container {
-        height: calc(100vh - 60px);
+      .nav-icon:hover,
+      .nav-icon.active {
+        color: var(--neon-blue);
+        text-shadow: 0 0 8px var(--neon-blue);
       }
 
-      /* Sidebar styling */
-      .sidebar {
-        background-color: var(--bg-main-dark);
-        border-right: 1px solid #2a2a3a;
+      .nav-icon:hover svg {
+        filter: drop-shadow(0 0 8px var(--neon-blue));
       }
 
-      /* --- Neon Glow & Borders --- */
-      .neon-border-blue {
-        border: 1px solid var(--neon-blue) !important;
-        box-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
+      /* Layout Columns */
+      .scroll-column {
+        height: calc(100vh - var(--nav-height));
+        overflow-y: auto;
+        padding-top: 20px;
+        padding-bottom: 50px;
       }
 
-      .neon-border-pink {
-        border: 1px solid var(--neon-pink) !important;
-        box-shadow: 0 0 8px rgba(217, 70, 239, 0.5);
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .hide-scrollbar::-webkit-scrollbar { 
+        display: none;
       }
 
-      /* Custom class for the active sidebar menu item fill */
-      .active-blue-fill {
-        background-color: var(--accent-blue-fill) !important;
+      /* Sidebar Items */
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        color: white;
+        margin-bottom: 5px;
       }
 
-      /* --- Bootstrap Overrides/Helpers --- */
-      /* Ensure images cover their container perfectly */
-      .object-fit-cover {
-        object-fit: cover;
+      .sidebar-item:hover, .sidebar-item.active {
+        background-color: rgba(188, 19, 254, 0.1);
+        border-left: 3px solid var(--neon-purple);
       }
 
-      /* Fix Bootstrap form control focus shadow to match theme or remove it */
-      .form-control:focus {
-        box-shadow: none !important;
+      .sidebar-item i {
+        width: 30px;
+        font-size: 1.2rem;
+        color: var(--neon-blue);
       }
 
-      /* Ensure card text doesn't wrap unthinkingly */
-      .card-title {
-        white-space: nowrap;
+      /* Neon Card General */
+      .neon-card {
+        cursor: pointer;
+        background-color: var(--bg-card);
+        border: 1px solid var(--neon-purple);
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(188, 19, 254, 0.15);
+        margin-bottom: 20px;
         overflow: hidden;
-        text-overflow: ellipsis;
+      }
+
+      /* Marketplace Specific Styles */
+      .market-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .market-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+        border-color: var(--neon-blue);
+      }
+
+      .market-img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #333;
+      }
+
+      .market-price {
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      .market-location {
+        color: var(--text-grey);
+        font-size: 0.85rem;
+      }
+
+      .create-listing-btn {
+        background: rgba(188, 19, 254, 0.1);
+        border: 1px solid var(--neon-blue);
+        color: var(--neon-blue);
+        width: 100%;
+        padding: 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .create-listing-btn:hover {
+        background: var(--neon-blue);
+        color: black;
+        box-shadow: 0 0 15px var(--neon-blue);
+      }
+
+      /* Search Input Style */
+      .search-input {
+        background: #1c1d26;
+        border: 1px solid #333;
+        border-radius: 20px;
+        color: white;
+        width: 100%;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+      }
+      .search-input:focus {
+        outline: none;
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 5px var(--neon-blue);
+      }
+
+      /* Contacts Right Sidebar */
+      .user-avatar {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--neon-pink);
+      }
+
+      /* Custom Column Widths - Updated */
+      @media (min-width: 992px) {
+        /* Left: 25% */
+        .col-custom-left { 
+            flex: 0 0 25% !important; 
+            max-width: 25% !important; 
+        }
+        
+        /* Center: 75% */
+        .col-custom-center { 
+            flex: 0 0 75% !important; 
+            max-width: 75% !important; 
+        }
+        
+        /* Right: Removed */
+      }
+
+      @media (max-width: 750px) {
+        .nav-side { display: none !important; }
+        .nav-center { width: 100% !important; flex: 0 0 100% !important; max-width: 100% !important; }
+        .icons-container { width: 100% !important; max-width: 100% !important; justify-content: space-around !important; padding: 0 20px; }
       }
     </style>
   </head>
   <body>
-    <header
-      class="main-header d-flex justify-content-between align-items-center px-4"
-    >
-      <div
-        class="header-left d-flex align-items-center fw-bold fs-5 text-neon-pink"
-      >
-        <i class="fa-brands fa-hive me-2 fs-4"></i>
-        <span class="brand-name">CONNECTIFY</span>
-      </div>
-
-      <nav class="header-center d-flex h-100">
-        <a
-          href="#"
-          class="nav-icon d-flex align-items-center text-secondary fs-4 px-2 text-decoration-none"
-          style="margin-inline: 0 30px"
-          ><i class="fa-solid fa-house"></i
-        ></a>
-        <a
-          href="#"
-          class="nav-icon active d-flex align-items-center text-secondary fs-4 px-2 text-decoration-none"
-          ><i class="fa-solid fa-store"></i
-        ></a>
-        <a
-          href="#"
-          class="nav-icon d-flex align-items-center text-secondary fs-4 px-2 text-decoration-none"
-          style="margin-inline: 30px 0"
-          ><i class="fa-solid fa-circle-play"></i
-        ></a>
-      </nav>
-
-      <div class="header-right d-flex align-items-center gap-3">
-        <i
-          class="fa-solid fa-magnifying-glass action-icon p-2 rounded-circle bg-dark-subtle"
-        ></i>
-        <i
-          class="fa-solid fa-video action-icon p-2 rounded-circle bg-dark-subtle"
-        ></i>
-        <i
-          class="fa-solid fa-bell action-icon p-2 rounded-circle bg-dark-subtle"
-        ></i>
-        <i class="fa-solid fa-circle-user action-icon fs-3"></i>
-
-        <div
-          class="location-tag d-flex align-items-center gap-2 text-neon-blue ms-3 small"
-        >
-          <i class="fa-solid fa-location-dot"></i>
-          <span>الدار البيضاء - km 65</span>
+    
+    <nav class="navbar fixed-top p-0" style="background-color: var(--bg-card); border-bottom: 1px solid var(--neon-purple); box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);">
+      <div class="container-fluid">
+        <div class="row w-100 align-items-center m-0" style="height: var(--nav-height);">
+          
+          <div class="col-3 d-flex align-items-center gap-2 ps-2 nav-side">
+             <img src="/html/img/title_img.png" alt="Logo" class="ms-3" style="height: 50px; width: auto; object-fit: contain;"/>
+             <a class="navbar-brand" href="#">CONNECTIFY</a>
+          </div>
+    
+          <div class="col-6 d-flex justify-content-center nav-center">
+            <div class="d-flex justify-content-between gap-4 icons-container" style="width: 60%; max-width: 400px;">
+              
+              <div class="nav-icon"><i class="fas fa-home"></i></div>
+              <div class="nav-icon active"><i class="fas fa-store"></i></div>
+              
+              <div class="nav-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 3px;">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                  <line x1="2" y1="7" x2="22" y2="7"></line>
+                  <line x1="8" y1="2" x2="6" y2="7"></line>
+                  <line x1="16" y1="2" x2="14" y2="7"></line>
+                  <path d="M10 10l6 3.5-6 3.5V10z" fill="currentColor" stroke="none"></path>
+                </svg>
+              </div>
+    
+            </div>
+          </div>
+    
+          <div class="col-3 d-flex align-items-center justify-content-end gap-3 pe-2 nav-side">
+            <div class="nav-icon"><i class="fas fa-search"></i></div>
+            <div class="nav-icon"><i class="fas fa-bell"></i></div>
+            <img src="https://i.pravatar.cc/150?img=11" class="user-avatar" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--neon-pink);"/>
+          </div>
+    
         </div>
       </div>
-    </header>
+    </nav>
 
-    <div class="container-fluid app-container">
-      <div class="row h-100">
-        <aside class="col-lg-3 col-xl-2 sidebar p-4 d-flex flex-column gap-3">
-          <div
-            class="input-group sidebar-search neon-border-blue rounded-pill overflow-hidden bg-card-dark"
-          >
-            <span
-              class="input-group-text bg-transparent border-0 text-secondary ps-3"
-              ><i class="fa-solid fa-magnifying-glass"></i
-            ></span>
-            <input
-              type="text"
-              class="form-control bg-transparent border-0 text-white shadow-none"
-              placeholder="Search Marketplace"
-            />
+    <div style="height: var(--nav-height)"></div>
+
+    <div class="container-fluid">
+      <div class="row">
+        
+        <div class="d-none d-lg-block scroll-column col-custom-left">
+          <div class="mb-3">
+             
+             <input type="text" class="search-input" placeholder="Search Marketplace..." />
           </div>
+          
+          <button class="create-listing-btn mb-4">
+            <i class="fas fa-plus"></i> Create new listing
+          </button>
 
-          <nav class="nav flex-column gap-3 mt-2">
-            <a
-              href="#"
-              class="nav-link active-blue-fill d-flex align-items-center gap-3 text-white rounded-3 fw-semibold px-3 py-2"
-            >
-              <i class="fa-solid fa-shop"></i>
-              <span>Browse all</span>
-            </a>
-            <a
-              href="#"
-              class="nav-link neon-border-blue d-flex justify-content-center text-white rounded-pill fw-semibold px-3 py-2"
-            >
-              + Create new listing
-            </a>
-          </nav>
-        </aside>
-
-        <main class="col-lg-9 col-xl-10 content-area p-4 overflow-auto">
-          <h2 class="fs-4 mb-4 text-white">Today's picks</h2>
-
-          <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 pb-4">
-            <div class="col">
-              <div
-                class="card h-100 bg-card-dark text-white neon-border-pink border-0"
-              >
-                <div
-                  class="card-img-top-wrapper"
-                  style="height: 220px; overflow: hidden"
-                >
-                  <img
-                    src="https://via.placeholder.com/400x300/333/fff?text=iPhone+14+Pro"
-                    class="card-img-top h-100 w-100 object-fit-cover"
-                    alt="..."
-                  />
-                </div>
-                <div class="card-body font-monospace">
-                  <h5 class="card-title fw-bold mb-1">MAD3,500</h5>
-                  <p class="card-text text-truncate mb-1 text-light-emphasis">
-                    iPhone 14 Pro 128Gb batterie 88
-                  </p>
-                  <p class="card-text small text-secondary">
-                    Casablanca, Morocco
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div
-                class="card h-100 bg-card-dark text-white neon-border-pink border-0"
-              >
-                <div
-                  class="card-img-top-wrapper"
-                  style="height: 220px; overflow: hidden"
-                >
-                  <img
-                    src="https://via.placeholder.com/400x300/333/fff?text=Mercedes+Car"
-                    class="card-img-top h-100 w-100 object-fit-cover"
-                    alt="..."
-                  />
-                </div>
-                <div class="card-body font-monospace">
-                  <h5 class="card-title fw-bold mb-1">MAD180,000</h5>
-                  <p class="card-text text-truncate mb-1 text-light-emphasis">
-                    Casablanca, Morocco
-                  </p>
-                  <p class="card-text small text-secondary">&nbsp;</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div
-                class="card h-100 bg-card-dark text-white neon-border-pink border-0"
-              >
-                <div
-                  class="card-img-top-wrapper"
-                  style="height: 220px; overflow: hidden"
-                >
-                  <img
-                    src="https://via.placeholder.com/400x300/333/fff?text=iPhone+13+Back"
-                    class="card-img-top h-100 w-100 object-fit-cover"
-                    alt="..."
-                  />
-                </div>
-                <div class="card-body font-monospace">
-                  <h5 class="card-title fw-bold mb-1">MAD1,100</h5>
-                  <p class="card-text text-truncate mb-1 text-light-emphasis">
-                    iPhone 13 normal 128Go 97 % by
-                  </p>
-                  <p class="card-text small text-secondary">
-                    Casablanca, Morocco
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div
-                class="card h-100 bg-card-dark text-white neon-border-pink border-0"
-              >
-                <div
-                  class="card-img-top-wrapper"
-                  style="height: 220px; overflow: hidden"
-                >
-                  <img
-                    src="https://via.placeholder.com/400x300/333/fff?text=iPhone+14+Pro+Front"
-                    class="card-img-top h-100 w-100 object-fit-cover"
-                    alt="..."
-                  />
-                </div>
-                <div class="card-body font-monospace">
-                  <h5 class="card-title fw-bold mb-1">MAD3,500</h5>
-                  <p class="card-text text-truncate mb-1 text-light-emphasis">
-                    iPhone 14 Pro 128Gb batterie 88
-                  </p>
-                  <p class="card-text small text-secondary">
-                    Casablanca, Morocco
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div
-                class="card h-100 bg-card-dark text-white neon-border-pink border-0"
-              >
-                <div
-                  class="card-img-top-wrapper"
-                  style="height: 220px; overflow: hidden"
-                >
-                  <img
-                    src="https://via.placeholder.com/400x300/333/fff?text=iPhone+13+Front"
-                    class="card-img-top h-100 w-100 object-fit-cover"
-                    alt="..."
-                  />
-                </div>
-                <div class="card-body font-monospace">
-                  <h5 class="card-title fw-bold mb-1">MAD1,100</h5>
-                  <p class="card-text text-truncate mb-1 text-light-emphasis">
-                    iPhone 13 normal 128Go 97 % by-pass wifi
-                  </p>
-                  <p class="card-text small text-secondary">
-                    Casablanca, Morocco
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div
-                class="card h-100 bg-card-dark text-white neon-border-pink border-0"
-              >
-                <div
-                  class="card-img-top-wrapper"
-                  style="height: 220px; overflow: hidden"
-                >
-                  <img
-                    src="https://via.placeholder.com/400x300/333/fff?text=SEAT+Leon+FR"
-                    class="card-img-top h-100 w-100 object-fit-cover"
-                    alt="..."
-                  />
-                </div>
-                <div class="card-body font-monospace">
-                  <h5 class="card-title fw-bold mb-1">FREE</h5>
-                  <p class="card-text text-truncate mb-1 text-light-emphasis">
-                    SEAT Leon FR Anniversary 2020
-                  </p>
-                  <p class="card-text small text-secondary">
-                    Casablanca, Morocco
-                  </p>
-                </div>
-              </div>
-            </div>
+          <div class="sidebar-item active">
+            <i class="fas fa-store"></i> <span>Browse all</span>
           </div>
-        </main>
-      </div>
+          <div class="sidebar-item">
+            <i class="fas fa-bell"></i> <span>Notifications</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-inbox"></i> <span>Inbox</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-shopping-bag"></i> <span>Buying</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-tag"></i> <span>Selling</span>
+          </div>
+          
+          <hr style="border-color: var(--neon-purple)" />
+          
+          <h6 class="text-secondary ms-2 mb-2">Categories</h6>
+          <div class="sidebar-item">
+            <i class="fas fa-car"></i> <span>Vehicles</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-home"></i> <span>Property</span>
+          </div>
+          <div class="sidebar-item">
+            <i class="fas fa-mobile-alt"></i> <span>Electronics</span>
+          </div>
+        </div>
+
+        <div class="col-md-12 col-custom-center scroll-column hide-scrollbar">
+          
+            <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+                <h4 class="fw-bold">Marketplace</h4>
+                
+            </div>
+
+            <div class="row g-3">
+                <div class="col-6 col-md-4">
+                    <div class="neon-card market-card">
+                        <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-3">
+                            <div class="market-price">MAD 3,500</div>
+                            <div class="text-white mb-1">iPhone 14 Pro 128Gb</div>
+                            <div class="market-location">Casablanca, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="neon-card market-card">
+                        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3dab?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-3">
+                            <div class="market-price">MAD 180,000</div>
+                            <div class="text-white mb-1">Appartement 2 Chambres</div>
+                            <div class="market-location">Bouskoura, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="neon-card market-card">
+                        <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-3">
+                            <div class="market-price">MAD 1,100</div>
+                            <div class="text-white mb-1">iPhone 13 Normal</div>
+                            <div class="market-location">Casablanca, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                 <div class="col-6 col-md-4">
+                    <div class="neon-card market-card">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-3">
+                            <div class="market-price">MAD 800</div>
+                            <div class="text-white mb-1">Nike Air Max Red</div>
+                            <div class="market-location">Rabat, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="neon-card market-card">
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-3">
+                            <div class="market-price">MAD 4,200</div>
+                            <div class="text-white mb-1">MacBook Pro 2018</div>
+                            <div class="market-location">Marrakech, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4">
+                    <div class="neon-card market-card">
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-3">
+                            <div class="market-price">MAD 120,000</div>
+                            <div class="text-white mb-1">Chevrolet Camaro</div>
+                            <div class="market-location">Tanger, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

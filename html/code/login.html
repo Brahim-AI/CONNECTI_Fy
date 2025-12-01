@@ -24,7 +24,6 @@
             align-items: center;
             min-height: 100vh;
             color: #fff;
-            height: 50;
         }
 
         /* --- Phone Frame --- */
@@ -32,7 +31,7 @@
             position: relative;
             width: 340px;
             height: auto; 
-            min-height: 60px; /* زدت شوية فالطول باش تهز التبدال */
+            min-height: 60px;
             background: #050510;
             border-radius: 40px;
             padding: 30px 25px 40px 25px;
@@ -41,7 +40,7 @@
                         inset 0 0 20px rgba(213, 0, 249, 0.05);
             display: flex;
             flex-direction: column;
-            justify-content: center; /* باش يجي المحتوى الوسط */
+            justify-content: center;
         }
 
         .phone-frame::before {
@@ -283,21 +282,43 @@
 
             <button type="button" class="btn" onclick="verifyCode()">VERIFY</button>
         </div>
+
+        <div id="new-password-screen" class="hidden fade-in">
+            <h2 class="title">New Password</h2>
+            <p class="instruction-text">Create a strong password for your account.</p>
+
+            <form>
+                <div class="input-group">
+                    <input type="password" id="new-pass" placeholder="New Password">
+                    <i class="fas fa-lock"></i>
+                    <p class="error-msg" id="msg-new-pass"></p>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="confirm-pass" placeholder="Confirm Password">
+                    <i class="fas fa-lock"></i>
+                    <p class="error-msg" id="msg-confirm-pass"></p>
+                </div>
+
+                <button type="button" class="btn" onclick="resetPassword()">CHANGE PASSWORD</button>
+            </form>
+        </div>
+
     </div>
 
     <script>
         // --- Navigation Functions ---
         function showForgot() {
-            // Hide Login, Show Forgot
             document.getElementById('login-screen').classList.add('hidden');
-            document.getElementById('otp-screen').classList.add('hidden'); // Ensure OTP is hidden
+            document.getElementById('otp-screen').classList.add('hidden');
+            document.getElementById('new-password-screen').classList.add('hidden');
             document.getElementById('forgot-screen').classList.remove('hidden');
         }
 
         function showLogin() {
-            // Hide everything, Show Login
             document.getElementById('forgot-screen').classList.add('hidden');
             document.getElementById('otp-screen').classList.add('hidden');
+            document.getElementById('new-password-screen').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
         }
 
@@ -359,8 +380,35 @@
             if (code.length < 4) {
                 alert("Please enter the full 4-digit code.");
             } else {
-                alert("Verified! You can now reset your password.");
-                // Here redirect to 'new-password' view if you have one
+                // If verified successfully, go to New Password Screen
+                document.getElementById('otp-screen').classList.add('hidden');
+                document.getElementById('new-password-screen').classList.remove('hidden');
+            }
+        }
+
+        // --- Logic: RESET PASSWORD (Final Step) ---
+        function resetPassword() {
+            const newPass = document.getElementById('new-pass');
+            const confPass = document.getElementById('confirm-pass');
+            const msgNew = document.getElementById('msg-new-pass');
+            const msgConf = document.getElementById('msg-confirm-pass');
+
+            resetErrors([newPass, confPass], [msgNew, msgConf]);
+            let isValid = true;
+
+            if (newPass.value.length < 6) {
+                showError(newPass, msgNew, "Password must be at least 6 chars");
+                isValid = false;
+            }
+
+            if (newPass.value !== confPass.value) {
+                showError(confPass, msgConf, "Passwords do not match");
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert("Password Updated Successfully!");
+                showLogin(); // Go back to login screen
             }
         }
 
