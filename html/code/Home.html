@@ -270,7 +270,7 @@
 }
 
       .post-actions {
-        padding: 10px 15px;
+        padding: 30px 15px;
         display: flex;
         justify-content: space-around;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -350,6 +350,7 @@
     </style>
   </head>
   <body>
+    
     <nav class="navbar fixed-top p-0" style="background-color: var(--bg-card); border-bottom: 1px solid var(--neon-purple); box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);">
   <div class="container-fluid">
     <div class="row w-100 align-items-center m-0" style="height: var(--nav-height);">
@@ -680,5 +681,146 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chat Window Container -->
+<div id="chatWindowContainer" style="position: fixed; bottom: 0; right: 20px; z-index: 9999; display: none;">
+  <div class="chat-mini-window" style="
+    width: 350px;
+    height: 500px;
+    background: radial-gradient(circle at top, #0f1c35 0%, #020610 100%);
+    border: 2px solid var(--neon-blue);
+    border-radius: 15px 15px 0 0;
+    box-shadow: 0 0 30px rgba(0, 242, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    animation: slideUpChat 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  ">
+    <!-- Chat Header -->
+    <div style="
+      background: rgba(2, 6, 16, 0.9);
+      padding: 12px 15px;
+      border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: 15px 15px 0 0;
+    ">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img id="chatWindowAvatar" src="" style="width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--neon-blue);">
+        <div>
+          <div id="chatWindowName" style="font-weight: bold; font-size: 0.95rem; color: white;"></div>
+          <small style="color: var(--neon-blue); font-size: 0.75rem;">Online</small>
+        </div>
+      </div>
+      <div style="display: flex; gap: 15px; align-items: center;">
+        <i class="fas fa-minus" id="minimizeChat" style="color: var(--neon-blue); cursor: pointer; font-size: 1rem;"></i>
+        <i class="fas fa-times" id="closeChat" style="color: #ff0055; cursor: pointer; font-size: 1.1rem;"></i>
+      </div>
+    </div>
+
+    <!-- Chat Body (iframe) -->
+    <iframe id="chatIframe" src="" style="
+      flex: 1;
+      border: none;
+      width: 100%;
+      background: transparent;
+    "></iframe>
+  </div>
+</div>
+
+<style>
+  @keyframes slideUpChat {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .chat-mini-window.minimized {
+    height: 50px !important;
+    animation: minimizeChat 0.3s ease;
+  }
+
+  .chat-mini-window.minimized iframe {
+    display: none;
+  }
+
+  @keyframes minimizeChat {
+    from { height: 500px; }
+    to { height: 50px; }
+  }
+
+  @keyframes maximizeChat {
+    from { height: 50px; }
+    to { height: 500px; }
+  }
+
+  @media (max-width: 768px) {
+    #chatWindowContainer .chat-mini-window {
+      width: 100vw !important;
+      height: 100vh !important;
+      right: 0 !important;
+      border-radius: 0 !important;
+      border: none !important;
+    }
+  }
+</style>
+
+<script>
+  // Chat Window Functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    const chatWindowContainer = document.getElementById('chatWindowContainer');
+    const chatWindow = document.querySelector('.chat-mini-window');
+    const chatIframe = document.getElementById('chatIframe');
+    const chatWindowName = document.getElementById('chatWindowName');
+    const chatWindowAvatar = document.getElementById('chatWindowAvatar');
+    const closeChat = document.getElementById('closeChat');
+    const minimizeChat = document.getElementById('minimizeChat');
+
+    // Add click event to all contacts
+    document.querySelectorAll('.contact-item').forEach(contact => {
+      contact.addEventListener('click', function() {
+        const userName = this.querySelector('span').textContent;
+        const userAvatar = this.querySelector('img').src;
+        
+        // Set chat window details
+        chatWindowName.textContent = userName;
+        chatWindowAvatar.src = userAvatar;
+        
+        // Load chat page in iframe (adjust path to your chat HTML file)
+        chatIframe.src = '/html/code/chat.html'; // ← Change this to your chat page path
+        
+        // Show chat window
+        chatWindowContainer.style.display = 'block';
+        chatWindow.classList.remove('minimized');
+      });
+    });
+
+    // Close chat
+    closeChat.addEventListener('click', function() {
+      chatWindowContainer.style.display = 'none';
+      chatIframe.src = '';
+    });
+
+    // Minimize/Maximize chat
+    minimizeChat.addEventListener('click', function() {
+      if (chatWindow.classList.contains('minimized')) {
+        chatWindow.classList.remove('minimized');
+        chatWindow.style.animation = 'maximizeChat 0.3s ease';
+        chatIframe.style.display = 'block';
+        this.classList.remove('fa-window-maximize');
+        this.classList.add('fa-minus');
+      } else {
+        chatWindow.classList.add('minimized');
+        this.classList.remove('fa-minus');
+        this.classList.add('fa-window-maximize');
+      }
+    });
+  });
+</script>
+  
   </body>
 </html>
