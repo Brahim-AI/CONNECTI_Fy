@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connectify - Marketplace</title>
+    <link rel="icon" href="/main/img/title_img.png" type="image/png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Audiowide&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+      :root {
+        --bg-dark: #050509;
+        --bg-card: #0f1016;
+        --neon-purple: #bc13fe;
+        --neon-blue: #00d4ff;
+        --neon-pink: #ff0055;
+        --text-grey: #b0b3b8;
+        --nav-height: 70px;
+        --error-red: #ff3333;
+        --success-green: #00ff9d;
+      }
+
+      /* === GLOBAL SCROLLBAR HIDING === */
+      ::-webkit-scrollbar { display: none; }
+      * { -ms-overflow-style: none; scrollbar-width: none; }
+
+      body {
+        background-color: var(--bg-dark);
+        color: white;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden;
+      }
+
+      /* Navbar Styling */
+      .navbar {
+        background-color: var(--bg-card);
+        border-bottom: 1px solid var(--neon-purple);
+        box-shadow: 0 0 15px rgba(188, 19, 254, 0.3);
+        height: var(--nav-height);
+        z-index: 1000;
+      }
+
+      .navbar-brand {
+        font-family: 'Audiowide', cursive;
+        font-weight: 700;
+        font-size: 1.8rem;
+        background: linear-gradient(to right, var(--neon-blue), var(--neon-purple));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .nav-icon {
+        font-size: 1.4rem;
+        color: var(--text-grey);
+        padding: 0 10px;
+        transition: 0.3s;
+        cursor: pointer;
+      }
+
+      .nav-icon:hover, .nav-icon.active {
+        color: var(--neon-blue);
+        text-shadow: 0 0 8px var(--neon-blue);
+      }
+
+      /* Layout Columns */
+      .scroll-column {
+        height: calc(100vh - var(--nav-height));
+        overflow-y: auto;
+        padding-top: 20px;
+        padding-bottom: 50px;
+      }
+
+      /* Sidebar Items */
+      .sidebar-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.2s;
+        color: white;
+        margin-bottom: 5px;
+      }
+
+      .sidebar-item:hover, .sidebar-item.active {
+        background-color: rgba(188, 19, 254, 0.1);
+        border-left: 3px solid var(--neon-purple);
+      }
+
+      .sidebar-item i { width: 30px; font-size: 1.2rem; color: var(--neon-blue); }
+
+      /* Neon Card General */
+      .neon-card {
+        cursor: pointer;
+        background-color: var(--bg-card);
+        border: 1px solid var(--neon-purple);
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(188, 19, 254, 0.15);
+        margin-bottom: 20px;
+        overflow: hidden;
+      }
+
+      /* Marketplace Specific Styles */
+      .market-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .market-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0 20px rgba(188, 19, 254, 0.4);
+        border-color: var(--neon-blue);
+      }
+
+      .market-img { width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #333; }
+      @media (max-width: 576px) {
+          .market-img { height: 160px; }
+          .market-price { font-size: 1rem; }
+      }
+
+      .market-price { color: white; font-weight: bold; font-size: 1.1rem; }
+      .market-location { color: var(--text-grey); font-size: 0.85rem; }
+
+      .create-listing-btn {
+        background: rgba(188, 19, 254, 0.1);
+        border: 1px solid var(--neon-blue);
+        color: var(--neon-blue);
+        width: 100%;
+        padding: 10px;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: 0.3s;
+      }
+
+      .create-listing-btn:hover {
+        background: var(--neon-blue);
+        color: black;
+        box-shadow: 0 0 15px var(--neon-blue);
+      }
+
+      .search-input {
+        background: #1c1d26;
+        border: 1px solid #333;
+        border-radius: 20px;
+        color: white;
+        width: 100%;
+        padding: 8px 15px;
+        transition: all 0.3s ease;
+      }
+      .search-input:focus {
+        outline: none;
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 5px var(--neon-blue);
+      }
+
+      .user-avatar {
+        cursor: pointer;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid var(--neon-pink);
+      }
+
+      /* === CREATE LISTING & PRODUCT VIEW MODAL STYLES === */
+      .custom-modal-content {
+        background-color: var(--bg-card);
+        border: 1px solid var(--neon-purple);
+        box-shadow: 0 0 20px rgba(188, 19, 254, 0.2);
+        color: white;
+        border-radius: 15px;
+      }
+
+      .custom-modal-header { border-bottom: 1px solid #333; }
+      .custom-modal-footer { border-top: 1px solid #333; }
+
+      .form-label {
+        color: var(--text-grey);
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+      }
+
+      .custom-input, .custom-select, .custom-textarea {
+        background-color: #1c1d26;
+        border: 1px solid #333;
+        color: white;
+        border-radius: 8px;
+        padding: 10px 15px;
+      }
+
+      .custom-input:focus, .custom-select:focus, .custom-textarea:focus {
+        background-color: #1c1d26;
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 8px rgba(0, 212, 255, 0.3);
+        color: white;
+        outline: none;
+      }
+
+      /* === PRODUCT DETAIL STYLES === */
+      .product-view-img {
+        width: 100%;
+        height: 350px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid var(--neon-blue);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        cursor: zoom-in;
+        transition: transform 0.2s;
+      }
+      .product-view-img:hover {
+        opacity: 0.9;
+      }
+
+      .product-view-price {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.4);
+      }
+      .btn-pay-chat {
+        background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
+        color: white;
+        border: none;
+        width: 100%;
+        padding: 12px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        border-radius: 30px;
+        box-shadow: 0 0 15px rgba(188, 19, 254, 0.4);
+        transition: 0.3s;
+      }
+      .btn-pay-chat:hover {
+        transform: scale(1.02);
+        box-shadow: 0 0 25px rgba(255, 0, 85, 0.6);
+        color: white;
+      }
+      .disclaimer-text {
+        color: var(--text-grey);
+        font-size: 0.8rem;
+        text-align: center;
+        margin-top: 8px;
+        display: block;
+      }
+
+      /* === LIGHTBOX STYLES === */
+      .lightbox {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background-color: rgba(0,0,0,0.95);
+        justify-content: center;
+        align-items: center;
+        backdrop-filter: blur(5px);
+      }
+      .lightbox-content {
+        max-width: 85%;
+        max-height: 85%;
+        border: 2px solid var(--neon-blue);
+        box-shadow: 0 0 30px var(--neon-blue);
+        border-radius: 10px;
+        animation: zoom 0.3s;
+        object-fit: contain;
+      }
+      
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        color: white;
+        font-size: 3rem;
+        cursor: pointer;
+        padding: 20px;
+        user-select: none;
+        z-index: 10001;
+        transition: 0.3s;
+      }
+      .lightbox-nav:hover {
+        color: var(--neon-blue);
+        text-shadow: 0 0 10px var(--neon-blue);
+      }
+      .lightbox-prev { left: 20px; }
+      .lightbox-next { right: 20px; }
+
+      @keyframes zoom {
+        from {transform:scale(0.8); opacity: 0;} 
+        to {transform:scale(1); opacity: 1;}
+      }
+
+      /* === ERROR STYLES === */
+      .custom-input.is-invalid, 
+      .custom-select.is-invalid, 
+      .custom-textarea.is-invalid,
+      .upload-area.is-invalid {
+        border-color: var(--error-red) !important;
+        box-shadow: 0 0 8px rgba(255, 51, 51, 0.3) !important;
+      }
+      .error-msg {
+        color: var(--error-red);
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: none;
+      }
+      .is-invalid + .error-msg {
+        display: block;
+      }
+
+      /* Upload Area Style */
+      .upload-area {
+        border: 2px dashed #333;
+        border-radius: 10px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background-color: rgba(255, 255, 255, 0.02);
+      }
+
+      .upload-area:hover, .upload-area.drag-over {
+        border-color: var(--neon-purple);
+        background-color: rgba(188, 19, 254, 0.05);
+      }
+
+      .upload-icon {
+        font-size: 2rem;
+        color: var(--text-grey);
+        margin-bottom: 10px;
+      }
+
+      /* Image Preview Container */
+      .preview-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 15px;
+        justify-content: center;
+      }
+      .preview-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid var(--neon-blue);
+        box-shadow: 0 0 5px rgba(0, 212, 255, 0.2);
+      }
+
+      .btn-neon-primary {
+        background: var(--neon-blue);
+        color: black;
+        border: none;
+        font-weight: bold;
+        padding: 10px 25px;
+        border-radius: 20px;
+        transition: 0.3s;
+      }
+
+      .btn-neon-primary:hover {
+        background: #fff;
+        color: black !important;
+        box-shadow: 0 0 15px var(--neon-blue);
+      }
+
+      .btn-neon-secondary {
+        background: transparent;
+        border: 1px solid #333;
+        color: var(--text-grey);
+        border-radius: 20px;
+        padding: 10px 20px;
+        transition: 0.3s;
+      }
+
+      .btn-neon-secondary:hover {
+        border-color: var(--neon-pink);
+        color: var(--neon-pink);
+      }
+
+      /* === MOBILE OFFCANVAS STYLE === */
+      .offcanvas-neon {
+        background-color: var(--bg-card);
+        border-right: 1px solid var(--neon-purple);
+        color: white;
+        /* Width set to 70% to cover "half/part" of the screen, not full */
+        width: 70% !important; 
+      }
+      .offcanvas-neon .btn-close {
+        filter: invert(1);
+      }
+
+      /* === RESPONSIVE FIXES === */
+      @media (min-width: 992px) {
+        .col-custom-left { flex: 0 0 25% !important; max-width: 25% !important; }
+        .col-custom-center { flex: 0 0 75% !important; max-width: 75% !important; }
+      }
+
+      @media (max-width: 991px) {
+        .col-custom-center { 
+            flex: 0 0 100% !important; 
+            max-width: 100% !important; 
+            padding-left: 10px !important;
+            padding-right: 10px !important;
+        }
+        .navbar-brand { font-size: 1.4rem; }
+      }
+
+      @media (max-width: 576px) {
+        .navbar-brand { 
+            display: none; 
+        }
+        .nav-side img { height: 40px !important; margin-left: 5px !important; }
+        .icons-container { width: 100% !important; max-width: 100% !important; justify-content: space-evenly !important; }
+        .nav-side .fa-search, .nav-side .fa-bell { display: none; } 
+        .product-view-img { height: 250px; }
+      }
+    </style>
+  </head>
+  <body>
+    
+    <nav class="navbar fixed-top p-0">
+      <div class="container-fluid">
+        <div class="row w-100 align-items-center m-0 flex-nowrap" style="height: var(--nav-height);">
+          
+          <div class="col-2 col-lg-3 d-flex align-items-center gap-2 ps-2 nav-side">
+             <img src="/main/img/title_img.png" alt="Logo" class="ms-lg-3" style="height: 50px; width: auto; object-fit: contain;"/>
+             <a class="navbar-brand d-none d-md-block" href="#">CONNECTIFY</a>
+          </div>
+    
+          <div class="col-8 col-lg-6 d-flex justify-content-center nav-center px-0">
+            <div class="d-flex justify-content-between gap-2 gap-lg-4 icons-container" style="width: 90%; max-width: 400px;">
+              <div class="nav-icon"><i class="fas fa-home"></i></div>
+              <div class="nav-icon active"><i class="fas fa-store"></i></div>
+              <div class="nav-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 3px;">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <line x1="2" y1="7" x2="22" y2="7"></line>
+              <line x1="8" y1="2" x2="6" y2="7"></line>
+              <line x1="16" y1="2" x2="14" y2="7"></line>
+              <path d="M10 10l6 3.5-6 3.5V10z" fill="currentColor" stroke="none"></path>
+            </svg></div>
+            </div>
+          </div>
+    
+          <div class="col-2 col-lg-3 d-flex align-items-center justify-content-end gap-3 pe-2 nav-side">
+            <div class="nav-icon d-none d-sm-block"><i class="fas fa-search"></i></div>
+            <div class="nav-icon d-none d-sm-block"><i class="fas fa-bell"></i></div>
+            <img src="https://i.pravatar.cc/150?img=11" class="user-avatar"/>
+          </div>
+    
+        </div>
+      </div>
+    </nav>
+
+    <div style="height: var(--nav-height)"></div>
+
+    <div class="container-fluid">
+      <div class="row">
+        
+        <div class="d-none d-lg-block scroll-column col-custom-left">
+          <div class="mb-3">
+             <input type="text" class="search-input" placeholder="Search Marketplace..." />
+          </div>
+          
+          <button class="create-listing-btn mb-4" data-bs-toggle="modal" data-bs-target="#createListingModal">
+            <i class="fas fa-plus"></i> Create new listing
+          </button>
+
+          <div class="sidebar-item active" data-category="all"><i class="fas fa-store"></i> <span>Browse all</span></div>
+          <div class="sidebar-item"><i class="fas fa-bell"></i> <span>Notifications</span></div>
+          <div class="sidebar-item"><i class="fas fa-inbox"></i> <span>Inbox</span></div>
+          <div class="sidebar-item"><i class="fas fa-shopping-bag"></i> <span>Buying</span></div>
+          <div class="sidebar-item" ><i class="fas fa-tag"></i> <span>Selling</span></div>
+          
+          <hr style="border-color: var(--neon-purple)" />
+          
+          <h6 class="text-secondary ms-2 mb-2">Categories</h6>
+          <div class="sidebar-item" data-category="vehicles"><i class="fas fa-car"></i> <span>Vehicles</span></div>
+          <div class="sidebar-item" data-category="property"><i class="fas fa-home"></i> <span>Property</span></div>
+          <div class="sidebar-item" data-category="electronics"><i class="fas fa-mobile-alt"></i> <span>Electronics</span></div>
+          <div class="sidebar-item" data-category="clothing"><i class="fas fa-tshirt"></i> <span>Clothing</span></div>
+          <div class="sidebar-item" data-category="services"><i class="fas fa-tools"></i> <span>Services</span></div>
+        </div>
+
+        <div class="offcanvas offcanvas-start offcanvas-neon" tabindex="-1" id="mobileMenu">
+            <div class="offcanvas-header border-bottom border-secondary">
+              <h5 class="offcanvas-title fw-bold" style="color: var(--neon-blue);">Menu & Categories</h5>
+              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div class="mb-3">
+                    <input type="text" class="search-input" placeholder="Search Marketplace..." />
+                </div>
+                <div class="sidebar-item active" data-category="all"><i class="fas fa-store"></i> <span>Browse all</span></div>
+                <div class="sidebar-item"><i class="fas fa-bell"></i> <span>Notifications</span></div>
+                <div class="sidebar-item"><i class="fas fa-inbox"></i> <span>Inbox</span></div>
+                <div class="sidebar-item"><i class="fas fa-shopping-bag"></i> <span>Buying</span></div>
+                <div class="sidebar-item" ><i class="fas fa-tag"></i> <span>Selling</span></div>
+                
+                <hr style="border-color: var(--neon-purple)" />
+                
+                <h6 class="text-secondary ms-2 mb-2">Categories</h6>
+                <div class="sidebar-item" data-category="vehicles"><i class="fas fa-car"></i> <span>Vehicles</span></div>
+                <div class="sidebar-item" data-category="property"><i class="fas fa-home"></i> <span>Property</span></div>
+                <div class="sidebar-item" data-category="electronics"><i class="fas fa-mobile-alt"></i> <span>Electronics</span></div>
+                <div class="sidebar-item" data-category="clothing"><i class="fas fa-tshirt"></i> <span>Clothing</span></div>
+                <div class="sidebar-item" data-category="services"><i class="fas fa-tools"></i> <span>Services</span></div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-12 col-custom-center scroll-column">
+            <div class="d-flex justify-content-between align-items-center mb-4 px-2">
+                <div class="d-flex align-items-center">
+                    <h4 class="fw-bold mb-0 me-3">Marketplace</h4>
+                    <button class="btn btn-sm btn-neon-secondary d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileMenu">
+                        <i class="fas fa-bars me-1"></i> Menu
+                    </button>
+                </div>
+                
+                <button class="btn btn-sm btn-neon-primary d-lg-none" data-bs-toggle="modal" data-bs-target="#createListingModal">
+                    <i class="fas fa-plus"></i> Sell
+                </button>
+            </div>
+
+            <div class="row g-2 g-md-3" id="productsContainer">
+                
+                <div class="col-6 col-md-4 product-item" data-category="electronics">
+                    <div class="neon-card market-card" 
+                         data-desc="Brand new condition, battery health 98%. Comes with box and cable."
+                         data-phone="+212 612345678"
+                         data-images='["https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop", "https://images.unsplash.com/photo-1678652197831-2d180705cd2c?w=500&auto=format&fit=crop", "https://images.unsplash.com/photo-1663499482523-1c0c1669d942?w=500&auto=format&fit=crop"]'>
+                        <img src="https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-2 p-md-3">
+                            <div class="market-price">MAD 3,500</div>
+                            <div class="text-white mb-1 text-truncate">iPhone 14 Pro 128Gb</div>
+                            <div class="market-location text-truncate">Casablanca, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 product-item" data-category="property">
+                    <div class="neon-card market-card" data-desc="Beautiful sunny apartment in Bouskoura Green City. Security 24/7, pool view." data-phone="+212 699887766">
+                        <img src="https://images.unsplash.com/photo-1560179707-f14e90ef3dab?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-2 p-md-3">
+                            <div class="market-price">MAD 180,000</div>
+                            <div class="text-white mb-1 text-truncate">Appartement 2 Chambres</div>
+                            <div class="market-location text-truncate">Bouskoura, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 product-item" data-category="electronics">
+                    <div class="neon-card market-card" data-desc="Slightly used, works perfectly. FaceID is working. No scratches on screen." data-phone="+212 655443322">
+                        <img src="https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-2 p-md-3">
+                            <div class="market-price">MAD 1,100</div>
+                            <div class="text-white mb-1 text-truncate">iPhone 13 Normal</div>
+                            <div class="market-location text-truncate">Casablanca, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-6 col-md-4 product-item" data-category="clothing">
+                    <div class="neon-card market-card" data-desc="Size 42. Original Nike Air Max. Worn twice only." data-phone="+212 711223344">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-2 p-md-3">
+                            <div class="market-price">MAD 800</div>
+                            <div class="text-white mb-1 text-truncate">Nike Air Max Red</div>
+                            <div class="market-location text-truncate">Rabat, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 product-item" data-category="electronics">
+                    <div class="neon-card market-card" data-desc="i7 Processor, 16GB RAM, 512GB SSD. Perfect for coding and design." data-phone="+212 688990011">
+                        <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-2 p-md-3">
+                            <div class="market-price">MAD 4,200</div>
+                            <div class="text-white mb-1 text-truncate">MacBook Pro 2018</div>
+                            <div class="market-location text-truncate">Marrakech, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 product-item" data-category="vehicles">
+                    <div class="neon-card market-card" 
+                         data-desc="Model 2020, V8 Engine. 30,000 KM on the clock. Full option"
+                         data-phone="+212 622334455"
+                         data-images='["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&auto=format&fit=crop", "https://images.unsplash.com/photo-1533558701576-23c65e0272fb?w=500&auto=format&fit=crop"]'>
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=500&auto=format&fit=crop" class="market-img" />
+                        <div class="p-2 p-md-3">
+                            <div class="market-price">MAD 120,000</div>
+                            <div class="text-white mb-1 text-truncate">Chevrolet Camaro</div>
+                            <div class="market-location text-truncate">Tanger, Morocco</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="createListingModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content custom-modal-content">
+            
+            <div class="modal-header custom-modal-header">
+              <h5 class="modal-title fw-bold" style="color: var(--neon-blue);">
+                <i class="fas fa-tag me-2"></i>Create New Listing
+              </h5>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+              <form id="listingForm">
+                <div class="row g-3">
+                  
+                  <div class="col-md-12">
+                    <label class="form-label">Item Name</label>
+                    <input type="text" class="form-control custom-input required-field" id="itemName" placeholder="e.g. iPhone 14 Pro Max">
+                    <div class="error-msg">This field is required.</div>
+                  </div>
+      
+                  <div class="col-md-6">
+                    <label class="form-label">Category</label>
+                    <select class="form-select custom-select required-field" id="itemCategory">
+                      <option value="" selected>Select Type...</option>
+                      <option value="1">Electronics</option>
+                      <option value="2">Vehicles</option>
+                      <option value="3">Property</option>
+                      <option value="4">Clothing</option>
+                      <option value="5">Services</option>
+                    </select>
+                    <div class="error-msg">Please select a category.</div>
+                  </div>
+      
+                  <div class="col-md-6">
+                    <label class="form-label">Price (MAD)</label>
+                    <div class="input-group">
+                      <span class="input-group-text" style="background: #1c1d26; border: 1px solid #333; color: #888;">MAD</span>
+                      <input type="number" class="form-control custom-input required-field" id="itemPrice" placeholder="0.00" maxlength="9">
+                    </div>
+                    <div class="error-msg">Please enter a valid price.</div>
+                  </div>
+      
+                  <div class="col-md-6">
+                    <label class="form-label">City</label>
+                    <input type="text" class="form-control custom-input required-field" id="itemCity" placeholder="e.g. Casablanca" maxlength="30">
+                    <div class="error-msg">City is required.</div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <label class="form-label">Country</label>
+                    <input type="text" class="form-control custom-input required-field" id="itemCountry" placeholder="e.g. Morocco" maxlength="30">
+                    <div class="error-msg">Country is required.</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label">Phone Number</label>
+                    <div class="input-group">
+                        <select class="form-select custom-select" style="max-width: 110px;" id="itemCountryCode">
+    <option value="+212" selected>+212 (MA)</option>
+    <option value="+1">+1 (US)</option>
+    <option value="+1">+1 (CA)</option>
+    <option value="+44">+44 (UK)</option>
+    <option value="+33">+33 (FR)</option>
+    <option value="+34">+34 (ES)</option>
+    <option value="+39">+39 (IT)</option>
+    <option value="+49">+49 (DE)</option>
+    <option value="+31">+31 (NL)</option>
+    <option value="+32">+32 (BE)</option>
+    <option value="+971">+971 (AE)</option>
+    <option value="+966">+966 (SA)</option>
+    <option value="+974">+974 (QA)</option>
+    <option value="+965">+965 (KW)</option>
+    <option value="+20">+20 (EG)</option>
+    <option value="+213">+213 (DZ)</option>
+    <option value="+216">+216 (TN)</option>
+    <option value="+218">+218 (LY)</option>
+    <option value="+222">+222 (MR)</option>
+    <option value="+90">+90 (TR)</option>
+    <option value="+86">+86 (CN)</option>
+    <option value="+81">+81 (JP)</option>
+    <option value="+82">+82 (KR)</option>
+    <option value="+91">+91 (IN)</option>
+    <option value="+7">+7 (RU)</option>
+    <option value="+55">+55 (BR)</option>
+    <option value="+52">+52 (MX)</option>
+    <option value="+61">+61 (AU)</option>
+    <option value="+41">+41 (CH)</option>
+    <option value="+46">+46 (SE)</option>
+    <option value="+47">+47 (NO)</option>
+    <option value="+45">+45 (DK)</option>
+    <option value="+351">+351 (PT)</option>
+    <option value="+30">+30 (GR)</option>
+    <option value="+48">+48 (PL)</option>
+    <option value="+43">+43 (AT)</option>
+    <option value="+36">+36 (HU)</option>
+    <option value="+420">+420 (CZ)</option>
+    <option value="+353">+353 (IE)</option>
+    <option value="+358">+358 (FI)</option>
+    <option value="+380">+380 (UA)</option>
+    <option value="+40">+40 (RO)</option>
+    <option value="+385">+385 (HR)</option>
+    <option value="+381">+381 (RS)</option>
+    <option value="+359">+359 (BG)</option>
+    <option value="+961">+961 (LB)</option>
+    <option value="+962">+962 (JO)</option>
+    <option value="+964">+964 (IQ)</option>
+    <option value="+968">+968 (OM)</option>
+    <option value="+973">+973 (BH)</option>
+    <option value="+967">+967 (YE)</option>
+    <option value="+963">+963 (SY)</option>
+    <option value="+970">+970 (PS)</option>
+    <option value="+249">+249 (SD)</option>
+    <option value="+252">+252 (SO)</option>
+    <option value="+253">+253 (DJ)</option>
+    <option value="+269">+269 (KM)</option>
+    <option value="+27">+27 (ZA)</option>
+    <option value="+234">+234 (NG)</option>
+    <option value="+254">+254 (KE)</option>
+    <option value="+233">+233 (GH)</option>
+    <option value="+221">+221 (SN)</option>
+    <option value="+225">+225 (CI)</option>
+    <option value="+237">+237 (CM)</option>
+    <option value="+251">+251 (ET)</option>
+    <option value="+62">+62 (ID)</option>
+    <option value="+60">+60 (MY)</option>
+    <option value="+63">+63 (PH)</option>
+    <option value="+65">+65 (SG)</option>
+    <option value="+66">+66 (TH)</option>
+    <option value="+84">+84 (VN)</option>
+    <option value="+92">+92 (PK)</option>
+    <option value="+880">+880 (BD)</option>
+    <option value="+94">+94 (LK)</option>
+    <option value="+98">+98 (IR)</option>
+    <option value="+93">+93 (AF)</option>
+    <option value="+54">+54 (AR)</option>
+    <option value="+57">+57 (CO)</option>
+    <option value="+56">+56 (CL)</option>
+    <option value="+51">+51 (PE)</option>
+    <option value="+58">+58 (VE)</option>
+    <option value="+64">+64 (NZ)</option>
+    <option value="+352">+352 (LU)</option>
+    <option value="+356">+356 (MT)</option>
+    <option value="+354">+354 (IS)</option>
+    <option value="+370">+370 (LT)</option>
+    <option value="+371">+371 (LV)</option>
+    <option value="+372">+372 (EE)</option>
+    <option value="+421">+421 (SK)</option>
+    <option value="+386">+386 (SI)</option>
+    <option value="+357">+357 (CY)</option>
+    <option value="+972">+972 (IL)</option>
+    <option value="+852">+852 (HK)</option>
+    <option value="+886">+886 (TW)</option>
+</select>
+                        <input type="text" class="form-control custom-input required-field" id="itemPhone" placeholder="612345678" maxlength="15">
+                    </div>
+                    <div class="error-msg">Phone number is required.</div>
+                  </div>
+      
+                  <div class="col-md-12">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-control custom-textarea required-field" id="itemDesc" rows="4" placeholder="Describe your item in detail..."></textarea>
+                    <div class="error-msg">Description is required.</div>
+                  </div>
+      
+                  <div class="col-md-12">
+                    <label class="form-label">Photos (Max 5)</label>
+                    <div class="upload-area" id="uploadArea">
+                      <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                      <div class="upload-text">Click or Drag photos here</div>
+                      <input type="file" hidden multiple id="fileUpload" accept="image/*">
+                      
+                      <div class="preview-container" id="previewContainer"></div>
+                    </div>
+                    <div class="error-msg" id="uploadError">Please upload at least one photo.</div>
+                  </div>
+      
+                </div>
+              </form>
+            </div>
+      
+            <div class="modal-footer custom-modal-footer">
+              <button type="button" class="btn btn-neon-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-neon-primary" id="postBtn">Post Listing</button>
+            </div>
+      
+          </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="productViewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content custom-modal-content">
+            
+            <div class="modal-header custom-modal-header border-0 pb-0">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body pt-0">
+              <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <img src="" id="viewImg" class="product-view-img" title="Click to zoom" />
+                    <div class="text-center mt-2 text-secondary" style="font-size: 0.8rem;">
+                        <i class="fas fa-search-plus"></i> Click image to view full screen gallery
+                    </div>
+                </div>
+                <div class="col-md-6 d-flex flex-column justify-content-between">
+                    <div>
+                        <h2 class="fw-bold text-white mb-2" id="viewTitle">Product Name</h2>
+                        <p class="text-secondary mb-1"><i class="fas fa-map-marker-alt me-2 text-primary"></i><span id="viewLocation">Location</span></p>
+                        
+                        <p class="text-secondary mb-3"><i class="fas fa-phone-alt me-2 text-primary"></i><span id="viewPhone">+212 6XXXXXXXX</span></p>
+                        
+                        <div class="mb-3">
+                            <span id="viewPrice" class="product-view-price">MAD 0</span>
+                        </div>
+
+                        <h6 class="text-white border-bottom border-secondary pb-2 mb-2">Description</h6>
+                        <p class="text-secondary" id="viewDesc" style="font-size: 0.9rem; line-height: 1.6; max-height: 120px; overflow-y: auto; padding-right: 5px; word-wrap: break-word; overflow-wrap: break-word;">
+                            No description available.
+                        </p>
+                    </div>
+
+                    <div class="mt-4 pt-3 border-top border-secondary">
+                        <button class="btn-pay-chat" id="payBtn">
+                            Start chatting with seller <i class="fas fa-comments-dollar ms-2"></i>
+                        </button>
+                        
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <div id="imageLightbox" class="lightbox">
+        <span class="lightbox-nav lightbox-prev" id="lightboxPrev"><i class="fas fa-chevron-left"></i></span>
+        <img class="lightbox-content" id="lightboxImg">
+        <span class="lightbox-nav lightbox-next" id="lightboxNext"><i class="fas fa-chevron-right"></i></span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        
+        // === SEARCH LOGIC ===
+        const searchInputs = document.querySelectorAll('.search-input'); // Select all search inputs (mobile & desktop)
+        const productCards = document.querySelectorAll('.market-card');
+
+        searchInputs.forEach(input => {
+            input.addEventListener('keyup', function(e) {
+                const searchValue = e.target.value.toLowerCase().trim();
+                
+                // Sync values between inputs
+                searchInputs.forEach(otherInput => {
+                    if(otherInput !== e.target) otherInput.value = searchValue;
+                });
+
+                productCards.forEach(function(cardWrapper) {
+                    const title = cardWrapper.querySelector('.text-white.mb-1').textContent.toLowerCase();
+                    const location = cardWrapper.querySelector('.market-location').textContent.toLowerCase();
+                    const price = cardWrapper.querySelector('.market-price').textContent.toLowerCase();
+                    const colParent = cardWrapper.closest('.product-item'); // Changed to select product-item
+
+                    if (title.includes(searchValue) || location.includes(searchValue) || price.includes(searchValue)) {
+                    colParent.style.display = '';
+                    } else {
+                    colParent.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // === CATEGORY FILTER LOGIC (NEW) ===
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        const allProducts = document.querySelectorAll('.product-item');
+
+        sidebarItems.forEach(item => {
+            // Only add listener if it has a data-category attribute (skip Inbox/Notifications etc if they don't filter)
+            if(item.hasAttribute('data-category')) {
+                item.addEventListener('click', function() {
+                    // 1. Remove active class from all sidebar items
+                    sidebarItems.forEach(i => i.classList.remove('active'));
+                    
+                    // 2. Add active class to clicked item
+                    const selectedCategory = this.getAttribute('data-category');
+                    
+                    // Highlight all matching buttons (desktop and mobile)
+                    sidebarItems.forEach(i => {
+                        if(i.getAttribute('data-category') === selectedCategory) {
+                            i.classList.add('active');
+                        }
+                    });
+
+                    // 3. Filter Products
+                    allProducts.forEach(product => {
+                        const productCategory = product.getAttribute('data-category');
+                        
+                        if (selectedCategory === 'all' || selectedCategory === productCategory) {
+                            product.style.display = 'block'; // Show
+                        } else {
+                            product.style.display = 'none'; // Hide
+                        }
+                    });
+
+                    // 4. CHANGE: Auto-Close Mobile Menu when item is clicked
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    const bsOffcanvas = bootstrap.Offcanvas.getInstance(mobileMenu);
+                    if (bsOffcanvas) {
+                        bsOffcanvas.hide();
+                    }
+                });
+            }
+        });
+
+
+        // === GLOBAL VARIABLES FOR GALLERY ===
+        let currentGallery = [];
+        let currentIndex = 0;
+
+        // === PRODUCT CLICK & VIEW LOGIC ===
+        const productModalEl = document.getElementById('productViewModal');
+        const productModal = new bootstrap.Modal(productModalEl);
+        
+        const viewImg = document.getElementById('viewImg');
+        const viewTitle = document.getElementById('viewTitle');
+        const viewPrice = document.getElementById('viewPrice');
+        const viewLocation = document.getElementById('viewLocation');
+        const viewDesc = document.getElementById('viewDesc');
+        const viewPhone = document.getElementById('viewPhone'); // New
+
+        const cards = document.querySelectorAll('.market-card');
+        
+        cards.forEach(card => {
+            card.addEventListener('click', function() {
+                const img = this.querySelector('.market-img').src;
+                const price = this.querySelector('.market-price').textContent;
+                const title = this.querySelector('.text-white.mb-1').textContent;
+                const location = this.querySelector('.market-location').textContent;
+                const desc = this.getAttribute('data-desc') || "No description provided by seller. This is a great item in excellent condition.";
+                const phone = this.getAttribute('data-phone') || "No phone number available"; // New
+
+                // Get Images (if any array in data-images, else use single)
+                const imagesAttr = this.getAttribute('data-images');
+                if (imagesAttr) {
+                    try {
+                        currentGallery = JSON.parse(imagesAttr);
+                    } catch(e) {
+                        currentGallery = [img];
+                    }
+                } else {
+                    currentGallery = [img];
+                }
+
+                // Populate Modal
+                viewImg.src = currentGallery[0]; // Show first image
+                viewTitle.textContent = title;
+                viewPrice.textContent = price;
+                viewLocation.textContent = location;
+                viewDesc.textContent = desc;
+                viewPhone.textContent = phone; // New
+
+                productModal.show();
+            });
+        });
+
+        // === LIGHTBOX (GALLERY) LOGIC ===
+        const lightbox = document.getElementById('imageLightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const prevBtn = document.getElementById('lightboxPrev');
+        const nextBtn = document.getElementById('lightboxNext');
+
+        function updateLightboxImage() {
+            lightboxImg.src = currentGallery[currentIndex];
+            
+            // Show/Hide arrows based on gallery size
+            if (currentGallery.length > 1) {
+                prevBtn.style.display = 'block';
+                nextBtn.style.display = 'block';
+            } else {
+                prevBtn.style.display = 'none';
+                nextBtn.style.display = 'none';
+            }
+        }
+
+        // Open Lightbox
+        viewImg.addEventListener('click', function() {
+            currentIndex = 0; // Always start from first image when opening
+            updateLightboxImage();
+            lightbox.style.display = "flex"; 
+        });
+
+        // Next Image
+        nextBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent closing
+            currentIndex = (currentIndex + 1) % currentGallery.length; // Loop forward
+            updateLightboxImage();
+        });
+
+        // Prev Image
+        prevBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent closing
+            currentIndex = (currentIndex - 1 + currentGallery.length) % currentGallery.length; // Loop backward
+            updateLightboxImage();
+        });
+
+        // Close Lightbox
+        lightbox.addEventListener('click', function(e) {
+            if (e.target !== lightboxImg && e.target !== prevBtn && e.target !== nextBtn && e.target.parentNode !== prevBtn && e.target.parentNode !== nextBtn) {
+                 lightbox.style.display = "none";
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (lightbox.style.display === "flex") {
+                if (e.key === "ArrowRight") nextBtn.click();
+                if (e.key === "ArrowLeft") prevBtn.click();
+                if (e.key === "Escape") lightbox.style.display = "none";
+            }
+        });
+
+
+        // Pay Button Logic (Simulation)
+        document.getElementById('payBtn').addEventListener('click', function() {
+            alert("Startchating");
+        });
+
+
+        // === UPLOAD LOGIC ===
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileUpload');
+        const previewContainer = document.getElementById('previewContainer');
+        const uploadText = document.querySelector('.upload-text');
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                uploadText.style.display = 'none';
+                previewContainer.innerHTML = '';
+                
+                Array.from(files).forEach(file => {
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.classList.add('preview-img');
+                            previewContainer.appendChild(img);
+                        }
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+        }
+
+        uploadArea.addEventListener('click', function(e) {
+            if (e.target !== fileInput && !e.target.classList.contains('preview-img')) {
+                fileInput.click();
+            }
+        });
+
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+            uploadArea.classList.remove('is-invalid');
+            document.getElementById('uploadError').style.display = 'none';
+        });
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            uploadArea.classList.add('drag-over');
+        }
+        function unhighlight(e) {
+            uploadArea.classList.remove('drag-over');
+        }
+
+        uploadArea.addEventListener('drop', handleDrop, false);
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            handleFiles(files);
+            uploadArea.classList.remove('is-invalid');
+            document.getElementById('uploadError').style.display = 'none';
+        }
+
+
+        // === FORM VALIDATION ===
+        const postBtn = document.getElementById('postBtn');
+        
+        postBtn.addEventListener('click', function() {
+            let isValid = true;
+
+            const requiredInputs = document.querySelectorAll('.required-field');
+            requiredInputs.forEach(input => {
+                if (input.value.trim() === "") {
+                    input.classList.add('is-invalid');
+                    isValid = false;
+                    input.addEventListener('input', function() {
+                        if(this.value.trim() !== "") {
+                            this.classList.remove('is-invalid');
+                        }
+                    }, {once: true});
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+
+            if (fileInput.files.length === 0) {
+                uploadArea.classList.add('is-invalid');
+                document.getElementById('uploadError').style.display = 'block';
+                isValid = false;
+            } else {
+                uploadArea.classList.remove('is-invalid');
+                document.getElementById('uploadError').style.display = 'none';
+            }
+
+            if (isValid) {
+                const modalElement = document.getElementById('createListingModal');
+                const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                modalInstance.hide();
+                
+                document.getElementById('listingForm').reset();
+                previewContainer.innerHTML = '';
+                uploadText.style.display = 'block';
+            }
+        });
+
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connectify Messenger</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --bg-dark: #050509;
+        --bg-card: #0f1016;
+        --neon-purple: #bc13fe;
+        --neon-blue: #00d4ff;
+        --text-grey: #b0b3b8;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: white;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* Navbar الفوقانية */
+      .navbar {
+        height: 60px;
+        background-color: var(--bg-card);
+        border-bottom: 1px solid var(--neon-purple);
+        display: flex;
+        align-items: center;
+        padding: 0 20px;
+        flex-shrink: 0;
+      }
+
+      .back-btn {
+        color: var(--text-grey);
+        font-size: 1.2rem;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.3s;
+      }
+
+      .back-btn:hover {
+        color: var(--neon-blue);
+        text-shadow: 0 0 8px var(--neon-blue);
+      }
+
+      /* التقسيم ديال الصفحة */
+      .messenger-container {
+        display: flex;
+        height: calc(100vh - 60px); /* كنحيدو علو النافبار */
+        width: 100%;
+      }
+
+      /* الجزء ديال الكونطاط (ليسر) */
+      .contacts-sidebar {
+        width: 350px;
+        background-color: #0a0b10;
+        border-right: 1px solid var(--neon-purple);
+        overflow-y: auto;
+        padding: 15px;
+        flex-shrink: 0;
+      }
+
+      .contacts-sidebar::-webkit-scrollbar {
+        width: 5px;
+      }
+      .contacts-sidebar::-webkit-scrollbar-thumb {
+        background: var(--neon-purple);
+        border-radius: 4px;
+      }
+
+      .search-box {
+        margin-bottom: 20px;
+      }
+
+      .search-input {
+        background: #1c1d26;
+        border: 1px solid #333;
+        border-radius: 20px;
+        color: white;
+        width: 100%;
+        padding: 10px 15px;
+        outline: none;
+      }
+      .search-input:focus {
+        border-color: var(--neon-blue);
+        box-shadow: 0 0 5px var(--neon-blue);
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        gap: 12px;
+        transition: 0.2s;
+        margin-bottom: 5px;
+      }
+
+      .contact-item:hover,
+      .contact-item.active {
+        background-color: rgba(188, 19, 254, 0.15);
+        border-left: 3px solid var(--neon-blue);
+      }
+
+      .user-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 2px solid var(--neon-blue);
+        object-fit: cover;
+      }
+
+      .user-details h6 {
+        margin: 0;
+        font-weight: 600;
+        color: white;
+      }
+
+      .user-details small {
+        color: var(--text-grey);
+        font-size: 0.8rem;
+      }
+
+      /* الجزء ديال الشات (ليمن) */
+      .chat-area {
+        flex-grow: 1;
+        background-color: #000;
+        position: relative;
+      }
+
+      /* Iframe هو اللي غيهز chat.html */
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+      }
+
+      /* رسالة الترحيب قبل ما تختار شي واحد */
+      .welcome-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at center, #1a1a2e 0%, #000 100%);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+        text-align: center;
+      }
+
+      .welcome-icon {
+        font-size: 5rem;
+        color: var(--neon-purple);
+        margin-bottom: 20px;
+        text-shadow: 0 0 20px var(--neon-purple);
+      }
+
+      /* Responsive for Mobile */
+      @media (max-width: 768px) {
+        .contacts-sidebar {
+          width: 100%;
+          display: block;
+        }
+        .chat-area {
+          display: none; /* فالأول كنخبيو الشات فالتلفون */
+          width: 100%;
+        }
+
+        /* كلاس باش نبينو الشات فالتلفون */
+        .show-chat .contacts-sidebar {
+          display: none;
+        }
+        .show-chat .chat-area {
+          display: block;
+        }
+
+        .mobile-back-btn {
+          display: block !important;
+        }
+      }
+
+      .mobile-back-btn {
+        display: none;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 100;
+        background: rgba(0, 0, 0, 0.5);
+        color: white;
+        padding: 8px 12px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+
+      /* ... الستايلات لقدام ... */
+
+      /* زيد هاد الستايل الجديد */
+      .chat-header {
+        height: 70px;
+        background-color: var(--bg-card);
+        border-bottom: 1px solid var(--neon-purple);
+        display: none; /* مخبي فالبدية */
+        align-items: center;
+        padding: 0 20px;
+        justify-content: flex-start;
+        gap: 15px;
+      }
+
+      .chat-header .header-avatar {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        border: 2px solid var(--neon-blue);
+        object-fit: cover;
+      }
+
+      .chat-header .header-info h5 {
+        margin: 0;
+        color: white;
+        font-family: "Orbitron", sans-serif;
+        letter-spacing: 1px;
+      }
+
+      .chat-header .header-info span {
+        font-size: 0.8rem;
+        color: var(--neon-blue);
+      }
+
+      /* عدل الـ iframe باش يخلي بلاصة للـ header */
+      #chatFrame {
+        width: 100%;
+        height: calc(100% - 70px); /* كنقصو 70px ديال الهيدر */
+        border: none;
+        display: none; /* مخبي فالبدية تال من بعد */
+      }
+
+      /* فالـ Mobile، البوطونة ديال الرجوع غنحطوها وسط الهيدر */
+      @media (max-width: 768px) {
+        .mobile-back-btn {
+          position: static !important; /* مابقاتش absolute */
+          background: transparent !important;
+          font-size: 1.5rem;
+          padding: 0 !important;
+          margin-right: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <a href="Home.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Feed
+      </a>
+      <span
+        class="ms-auto text-white fw-bold"
+        style="font-family: 'Orbitron'; letter-spacing: 1px"
+        >MESSENGER</span
+      >
+    </nav>
+
+    <div class="messenger-container" id="mainContainer">
+      <div class="contacts-sidebar">
+        <div class="search-box">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Search Messenger..."
+          />
+        </div>
+
+        <div
+          class="contact-item"
+          onclick="openChat(this, 'Fy AI', 'https://i.pravatar.cc/150?img=60')"
+        >
+          <img src="https://i.pravatar.cc/150?img=60" class="user-avatar" />
+          <div class="user-details ms-2">
+            <h6>Fy AI</h6>
+            <small>Online</small>
+          </div>
+        </div>
+
+        <div
+          class="contact-item"
+          onclick="openChat(this, 'Al Mahmoudi', 'https://i.pravatar.cc/150?img=59')"
+        >
+          <img src="https://i.pravatar.cc/150?img=59" class="user-avatar" />
+          <div class="user-details ms-2">
+            <h6>Al Mahmoudi</h6>
+            <small>Active 5m ago</small>
+          </div>
+        </div>
+
+        <div
+          class="contact-item"
+          onclick="openChat(this, 'FatimaezZahra', 'https://i.pravatar.cc/150?img=32')"
+        >
+          <img src="https://i.pravatar.cc/150?img=32" class="user-avatar" />
+          <div class="user-details ms-2">
+            <h6>FatimaezZahra</h6>
+            <small>Active 1h ago</small>
+          </div>
+        </div>
+
+        <div
+          class="contact-item"
+          onclick="openChat(this, 'R3f Chend', 'https://i.pravatar.cc/150?img=12')"
+        >
+          <img src="https://i.pravatar.cc/150?img=12" class="user-avatar" />
+          <div class="user-details ms-2">
+            <h6>R3f Chend</h6>
+            <small>Online</small>
+          </div>
+        </div>
+
+        <div
+          class="contact-item"
+          onclick="openChat(this, 'Abu Mohamed', 'https://i.pravatar.cc/150?img=15')"
+        >
+          <img src="https://i.pravatar.cc/150?img=15" class="user-avatar" />
+          <div class="user-details ms-2">
+            <h6>Abu Mohamed</h6>
+            <small>Offline</small>
+          </div>
+        </div>
+
+        <div
+          class="contact-item"
+          onclick="openChat(this, 'Chirag Langer', 'https://i.pravatar.cc/150?img=19')"
+        >
+          <img src="https://i.pravatar.cc/150?img=19" class="user-avatar" />
+          <div class="user-details ms-2">
+            <h6>Chirag Langer</h6>
+            <small>Active 2h ago</small>
+          </div>
+        </div>
+      </div>
+      <div class="chat-area">
+        <div class="chat-header" id="chatHeader">
+          <div class="mobile-back-btn" onclick="closeChatMobile()">
+            <i class="fas fa-arrow-left"></i>
+          </div>
+
+          <img src="" id="headerAvatar" class="header-avatar" />
+          <div class="header-info">
+            <h5 id="headerName">Username</h5>
+            <span id="headerStatus">Active Now</span>
+          </div>
+        </div>
+
+        <div class="welcome-screen" id="welcomeScreen">
+          <i class="fas fa-comments welcome-icon"></i>
+          <h2 style="color: white; font-family: 'Orbitron'">
+            Connectify Messenger
+          </h2>
+          <p style="color: var(--text-grey)">
+            Select a contact to start chatting
+          </p>
+        </div>
+
+        <iframe id="chatFrame" src="" allow="camera; microphone"></iframe>
+      </div>
+    </div>
+
+    <script>
+      function openChat(element, username, avatar) {
+        // 1. Highlight selected contact
+        document
+          .querySelectorAll(".contact-item")
+          .forEach((item) => item.classList.remove("active"));
+        element.classList.add("active");
+
+        // 2. Hide welcome screen
+        document.getElementById("welcomeScreen").style.display = "none";
+
+        // 3. Update & Show Header (هادا هو الجديد)
+        const header = document.getElementById("chatHeader");
+        const headerName = document.getElementById("headerName");
+        const headerAvatar = document.getElementById("headerAvatar");
+        const chatFrame = document.getElementById("chatFrame");
+
+        header.style.display = "flex"; // بيّن الهيدر
+        chatFrame.style.display = "block"; // بيّن الفريم
+
+        headerName.innerText = username; // حط السمية
+        headerAvatar.src = avatar; // حط التصويرة
+
+        // 4. Load chat.html in iframe
+        const chatUrl = `chat.html?user=${encodeURIComponent(username)}`;
+        document.getElementById("chatFrame").src = chatUrl;
+
+        // 5. Mobile Logic
+        if (window.innerWidth <= 768) {
+          document.getElementById("mainContainer").classList.add("show-chat");
+        }
+      }
+
+      function closeChatMobile() {
+        document.getElementById("mainContainer").classList.remove("show-chat");
+        // اختياري: نقدرو نرجعو الهيدر يغبر إلا بغينا
+        // document.getElementById("chatHeader").style.display = "none";
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Connectify</title>
+    <link rel="icon" href="/html/img/title_img.png" type="image/png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        body {
+            background-color: #050510;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+
+        /* --- Phone Frame --- */
+        .phone-frame {
+            position: relative;
+            width: 340px;
+            height: auto; 
+            min-height: 60px;
+            background: #050510;
+            border-radius: 40px;
+            padding: 30px 25px 40px 25px;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            box-shadow: 0 0 30px rgba(0, 229, 255, 0.15), 
+                        inset 0 0 20px rgba(213, 0, 249, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .phone-frame::before {
+            content: '';
+            position: absolute;
+            top: -1px; left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00E5FF, transparent);
+            box-shadow: 0 0 10px #00E5FF;
+        }
+
+        h1.logo {
+            text-align: center;
+            font-size: 25px;
+            font-weight: 550;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            background: linear-gradient(90deg, #00E5FF, #fff, #D500F9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+        }
+
+        h2.title {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .instruction-text {
+            text-align: center;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        /* --- Input Styles --- */
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(64, 196, 255, 0.2);
+            border-radius: 25px;
+            padding: 12px 40px 12px 20px;
+            color: #fff;
+            font-size: 12px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-group input:focus {
+            border-color: #00E5FF;
+            background: rgba(0, 229, 255, 0.05);
+            box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+        }
+
+        .input-group i {
+            position: absolute;
+            right: 15px;
+            top: 14px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 9px;
+            margin-left: 15px;
+            margin-top: 5px;
+            display: none;
+            font-weight: 500;
+        }
+
+        /* --- Links & Buttons --- */
+        .forgot-pass {
+            display: block;
+            text-align: right;
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 20px;
+            margin-top: -5px;
+            text-decoration: none;
+            cursor: pointer;
+            padding-right: 10px;
+        }
+        .forgot-pass:hover { color: #00E5FF; }
+
+        .back-link {
+            display: block;
+            margin-bottom: 15px;
+            color: rgba(255,255,255,0.5);
+            font-size: 11px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .back-link:hover { color: #fff; }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            background: transparent;
+            border: 1px solid transparent;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(213, 0, 249, 0.2);
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+            transform: translateY(-1px);
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.4);
+        }
+        .footer-text a {
+            color: #00E5FF;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* --- OTP Styles --- */
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .otp-input {
+            width: 45px;
+            height: 50px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(64, 196, 255, 0.3);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 20px;
+            text-align: center;
+            outline: none;
+        }
+        .otp-input:focus {
+            border-color: #D500F9;
+            box-shadow: 0 0 10px rgba(213, 0, 249, 0.3);
+        }
+
+        /* --- Animation --- */
+        .hidden { display: none; }
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        <h1 class="logo">CONNECTIFY</h1>
+
+        <div id="login-screen" class="fade-in">
+            <h2 class="title">Welcome Back</h2>
+
+            <form>
+                <div class="input-group">
+                    <input type="email" id="login-email" placeholder="Email Address">
+                    <i class="far fa-envelope"></i>
+                    <p class="error-msg" id="msg-login-email"></p>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="login-password" placeholder="Password">
+                    <i class="fas fa-lock"></i>
+                    <p class="error-msg" id="msg-login-pass"></p>
+                </div>
+
+                <a onclick="showForgot()" class="forgot-pass">Forgot Password?</a>
+
+                <button type="button" class="btn" onclick="loginUser()">LOGIN</button>
+
+                <p class="footer-text">Don't have an account? <a href="index.html">Sign Up</a></p>
+            </form>
+        </div>
+
+        <div id="forgot-screen" class="hidden fade-in">
+            <a onclick="showLogin()" class="back-link"><i class="fas fa-chevron-left"></i> Back to Login</a>
+            <h2 class="title">Reset Password</h2>
+            <p class="instruction-text">Enter your email address to receive a 4-digit verification code.</p>
+
+            <form>
+                <div class="input-group">
+                    <input type="email" id="reset-email" placeholder="Enter your email">
+                    <i class="far fa-envelope"></i>
+                    <p class="error-msg" id="msg-reset-email"></p>
+                </div>
+
+                <button type="button" class="btn" onclick="sendCode()">SEND CODE</button>
+            </form>
+        </div>
+
+        <div id="otp-screen" class="hidden fade-in">
+            <a onclick="showForgot()" class="back-link"><i class="fas fa-chevron-left"></i> Change Email</a>
+            <h2 class="title">Verify Code</h2>
+            <p class="instruction-text">We sent a code to your email. Enter it below.</p>
+
+            <div class="otp-container">
+                <input type="text" class="otp-input" maxlength="1">
+                <input type="text" class="otp-input" maxlength="1">
+                <input type="text" class="otp-input" maxlength="1">
+                <input type="text" class="otp-input" maxlength="1">
+            </div>
+
+            <button type="button" class="btn" onclick="verifyCode()">VERIFY</button>
+        </div>
+
+        <div id="new-password-screen" class="hidden fade-in">
+            <h2 class="title">New Password</h2>
+            <p class="instruction-text">Create a strong password for your account.</p>
+
+            <form>
+                <div class="input-group">
+                    <input type="password" id="new-pass" placeholder="New Password">
+                    <i class="fas fa-lock"></i>
+                    <p class="error-msg" id="msg-new-pass"></p>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="confirm-pass" placeholder="Confirm Password">
+                    <i class="fas fa-lock"></i>
+                    <p class="error-msg" id="msg-confirm-pass"></p>
+                </div>
+
+                <button type="button" class="btn" onclick="resetPassword()">CHANGE PASSWORD</button>
+            </form>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Navigation Functions ---
+        function showForgot() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('otp-screen').classList.add('hidden');
+            document.getElementById('new-password-screen').classList.add('hidden');
+            document.getElementById('forgot-screen').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('forgot-screen').classList.add('hidden');
+            document.getElementById('otp-screen').classList.add('hidden');
+            document.getElementById('new-password-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        // --- Logic: LOGIN ---
+        function loginUser() {
+            const emailInp = document.getElementById('login-email');
+            const passInp = document.getElementById('login-password');
+            const msgEmail = document.getElementById('msg-login-email');
+            const msgPass = document.getElementById('msg-login-pass');
+
+            resetErrors([emailInp, passInp], [msgEmail, msgPass]);
+            let isValid = true;
+
+            if (!emailInp.value) {
+                showError(emailInp, msgEmail, "Please enter your email");
+                isValid = false;
+            } else if (!emailInp.value.endsWith("@gmail.com")) {
+                showError(emailInp, msgEmail, "Email must end with @gmail.com");
+                isValid = false;
+            }
+
+            if (!passInp.value) {
+                showError(passInp, msgPass, "Please enter your password");
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert("Login Successful! (Redirecting...)");
+            }
+        }
+
+        // --- Logic: SEND CODE (Forgot Password) ---
+        function sendCode() {
+            const emailInp = document.getElementById('reset-email');
+            const msgEmail = document.getElementById('msg-reset-email');
+
+            resetErrors([emailInp], [msgEmail]);
+
+            if (!emailInp.value) {
+                showError(emailInp, msgEmail, "Please enter your email");
+                return;
+            }
+            if (!emailInp.value.endsWith("@gmail.com")) {
+                showError(emailInp, msgEmail, "Email must end with @gmail.com");
+                return;
+            }
+
+            // If valid, go to OTP screen
+            document.getElementById('forgot-screen').classList.add('hidden');
+            document.getElementById('otp-screen').classList.remove('hidden');
+        }
+
+        // --- Logic: VERIFY CODE ---
+        function verifyCode() {
+            const inputs = document.querySelectorAll('.otp-input');
+            let code = "";
+            inputs.forEach(inp => code += inp.value);
+
+            if (code.length < 4) {
+                alert("Please enter the full 4-digit code.");
+            } else {
+                // If verified successfully, go to New Password Screen
+                document.getElementById('otp-screen').classList.add('hidden');
+                document.getElementById('new-password-screen').classList.remove('hidden');
+            }
+        }
+
+        // --- Logic: RESET PASSWORD (Final Step) ---
+        function resetPassword() {
+            const newPass = document.getElementById('new-pass');
+            const confPass = document.getElementById('confirm-pass');
+            const msgNew = document.getElementById('msg-new-pass');
+            const msgConf = document.getElementById('msg-confirm-pass');
+
+            resetErrors([newPass, confPass], [msgNew, msgConf]);
+            let isValid = true;
+
+            if (newPass.value.length < 6) {
+                showError(newPass, msgNew, "Password must be at least 6 chars");
+                isValid = false;
+            }
+
+            if (newPass.value !== confPass.value) {
+                showError(confPass, msgConf, "Passwords do not match");
+                isValid = false;
+            }
+
+            if (isValid) {
+                alert("Password Updated Successfully!");
+                showLogin(); // Go back to login screen
+            }
+        }
+
+        // --- Helpers ---
+        function resetErrors(inputs, msgs) {
+            inputs.forEach(inp => inp.style.borderColor = "rgba(64, 196, 255, 0.2)");
+            msgs.forEach(msg => {
+                msg.style.display = "none";
+                msg.innerText = "";
+            });
+        }
+
+        function showError(inputEl, msgEl, text) {
+            inputEl.style.borderColor = "#ff4d4d";
+            msgEl.innerText = text;
+            msgEl.style.display = "block";
+        }
+
+        // --- OTP Input Handling ---
+        const inputs = document.querySelectorAll('.otp-input');
+        inputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+            });
+            input.addEventListener('keydown', (e) => {
+                if(e.key === "Backspace" && e.target.value === "" && index > 0) {
+                        inputs[index - 1].focus();
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
